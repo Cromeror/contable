@@ -15,11 +15,6 @@ const SidebarSettings = [
     path: '/dashboard/transactions',
   },
   {
-    title: 'Transactions',
-    icon: ()=><></>,
-    path: '/dashboard/transactions',
-  },
-  {
     title: 'Plan contable',
     icon: ContentCut,
     path: '/dashboard/accounts',

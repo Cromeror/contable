@@ -1,5 +1,8 @@
 'use client'
-import React from 'react';
+import { Table } from '@/components/Table';
+import { TopBar } from '@/components/TopBar';
+import { Button, Grid, MenuItem, Pagination, TextField, Typography } from '@mui/material';
+import React, { useState } from 'react';
 
 // Datos de ejemplo
 const transactions = [
@@ -9,29 +12,47 @@ const transactions = [
 ];
 
 const Accounting = () => {
+    const [rowData, setRowData] = useState([
+        { account: "Tesla", concept: "Model Y" },
+        { account: "Ford", concept: "F-Series" },
+        { account: "Toyota", concept: "Corolla" },
+    ]);
+
+    const [colDefs, setColDefs] = useState([
+        { field: "account", headerName: "Cuenta", width: 150 },
+        { field: "concept", headerName: "Concepto", width: 150 },
+        { headerName: "Acciones", width: 150 },
+    ]);
+
     return (
         <div>
-            <h1>Vista Contable</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Descripción</th>
-                        <th>Fecha</th>
-                        <th>Monto</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {transactions.map(transaction => (
-                        <tr key={transaction.id}>
-                            <td>{transaction.id}</td>
-                            <td>{transaction.description}</td>
-                            <td>{transaction.date}</td>
-                            <td>${transaction.amount.toFixed(2)}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <TopBar />
+            <Grid container spacing={2} direction={'column'} style={{ padding: 20 }}>
+                <Grid item container xs={12} justifyContent={"space-between"} alignItems={"center"}>
+                    <Grid item container xs={12} sm={6}>
+                        <Typography>Filtros</Typography>
+                        <Grid container spacing={2} alignItems={'center'}>
+                            <Grid item>
+                                <TextField label="Cuenta" />
+                            </Grid>
+                            <Grid item>
+                                <Button>Limpiar</Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item>
+                        <Button variant='contained'>Agregar cuenta</Button>
+                    </Grid>
+                </Grid>
+                <Grid item container spacing={1} direction={'column'} alignItems={"flex-end"}>
+                    <Grid item xs={12} style={{ width: '100%' }}>
+                        <Table rowData={rowData} colDefs={colDefs} />
+                    </Grid>
+                    <Grid item>
+                        <Pagination count={10} />
+                    </Grid>
+                </Grid>
+            </Grid>
         </div>
     );
 };
