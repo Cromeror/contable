@@ -60,17 +60,16 @@ export const TransactionForm = () => {
                         {errors.account && touched.account && errors.account}
                     </FormHelperText>
                     <FormControl>
-                        <FormLabel id="demo-radio-buttons-group-label">Tipo de transacción</FormLabel>
+                        <FormLabel id="type-moviment-field">Tipo de transacción</FormLabel>
                         <RadioGroup
-                            aria-labelledby="demo-radio-buttons-group-label"
-                            defaultValue="female"
-                            name="radio-buttons-group"
+                            aria-labelledby="type-moviment-field"
+                            name="type"
                             row
                             onChange={handleChange}
                             value={values.type}
                         >
-                            <FormControlLabel value="debit" control={<Radio />} label="Debito" />
-                            <FormControlLabel value="credit" control={<Radio />} label="Credito" />
+                            <FormControlLabel value="debit" control={<Radio />} label="Débito" />
+                            <FormControlLabel value="credit" control={<Radio />} label="Crédito" />
                         </RadioGroup>
                     </FormControl>
                     <TextField
