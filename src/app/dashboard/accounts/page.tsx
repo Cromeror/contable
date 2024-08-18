@@ -1,6 +1,8 @@
 'use client'
+import { AccountingForm } from '@/components/AccountingForm';
+import { Search } from '@/components/Search';
 import { Table } from '@/components/Table';
-import { Button, Grid, MenuItem, Pagination, TextField, Typography } from '@mui/material';
+import { Button, Drawer, Grid, Pagination, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 // Datos de ejemplo
@@ -23,23 +25,27 @@ const Accounting = () => {
         { headerName: "Acciones", width: 150 },
     ]);
 
+    const [openNewAccountForm, setOpenNewAccountForm] = useState(false);
+
+    const toggleDrawer = () => () => {
+        setOpenNewAccountForm(!openNewAccountForm);
+    };
+
     return (
         <div>
             <Grid container spacing={2} direction={'column'} style={{ padding: 20 }}>
                 <Grid item container xs={12} justifyContent={"space-between"} alignItems={"center"}>
                     <Grid item container xs={12} sm={6}>
-                        <Typography>Filtros</Typography>
-                        <Grid container spacing={2} alignItems={'center'}>
-                            <Grid item>
-                                <TextField label="Cuenta" />
-                            </Grid>
-                            <Grid item>
-                                <Button>Limpiar</Button>
-                            </Grid>
-                        </Grid>
+                        <Typography variant="subtitle2" gutterBottom>Cuentas</Typography>
                     </Grid>
                     <Grid item>
-                        <Button variant='contained'>Agregar cuenta</Button>
+
+                        <Button variant='contained' onClick={toggleDrawer()}>Agregar cuenta</Button>
+                    </Grid>
+                </Grid>
+                <Grid item container xs={12} justifyContent={"space-between"} alignItems={"center"}>
+                    <Grid item container xs={12} sm={6}>
+                        <Search />
                     </Grid>
                 </Grid>
                 <Grid item container spacing={1} direction={'column'} alignItems={"flex-end"}>
@@ -51,6 +57,18 @@ const Accounting = () => {
                     </Grid>
                 </Grid>
             </Grid>
+            <Drawer
+                anchor={"right"}
+                open={openNewAccountForm}
+                onClose={toggleDrawer()}
+            >
+                <div className='px-4 py-8 flex flex-col gap-4'>
+                    <Typography variant="h6">
+                        Agregar nueva cuenta
+                    </Typography>
+                    <AccountingForm />
+                </div>
+            </Drawer>
         </div>
     );
 };
