@@ -39,7 +39,6 @@ const Accounting = () => {
                         <Typography variant="subtitle2" gutterBottom>Cuentas</Typography>
                     </Grid>
                     <Grid item>
-
                         <Button variant='contained' onClick={toggleDrawer()}>Agregar cuenta</Button>
                     </Grid>
                 </Grid>

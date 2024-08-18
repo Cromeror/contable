@@ -1,18 +1,23 @@
-import { Button, FormHelperText, TextField } from "@mui/material";
+import { Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 import { Formik } from "formik";
 import * as Yup from 'yup';
 
 const SignupSchema = Yup.object().shape({
+    date: Yup.date().required('La fecha es requerida'),
     account: Yup.string().required('El número de cuenta es requerido'),
     concept: Yup.string().required('El concepto es requerido'),
 });
 
 const initialValues = {
+    date: dayjs(),
     account: '',
     concept: '',
+    type: 'debit',
 };
 
-export const AccountingForm = () => {
+export const TransactionForm = () => {
     return (
         <Formik
             initialValues={initialValues}
@@ -35,6 +40,14 @@ export const AccountingForm = () => {
                 isSubmitting,
             }) => (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
+                    <DatePicker
+                        label="Basic date picker"
+                        onChange={(value)=>{
+                            console.log(value);
+                           // handleChange("date")(dayjs());
+                        }}
+                        value={values.date}
+                    />
                     <TextField
                         label="Número de cuenta"
                         name="account"
@@ -46,6 +59,20 @@ export const AccountingForm = () => {
                     <FormHelperText error={!!(errors.account && touched.account && errors.account)}>
                         {errors.account && touched.account && errors.account}
                     </FormHelperText>
+                    <FormControl>
+                        <FormLabel id="demo-radio-buttons-group-label">Tipo de transacción</FormLabel>
+                        <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            defaultValue="female"
+                            name="radio-buttons-group"
+                            row
+                            onChange={handleChange}
+                            value={values.type}
+                        >
+                            <FormControlLabel value="debit" control={<Radio />} label="Debito" />
+                            <FormControlLabel value="credit" control={<Radio />} label="Credito" />
+                        </RadioGroup>
+                    </FormControl>
                     <TextField
                         label="Concepto"
                         error={!!(errors.concept && touched.concept && errors.concept)}
@@ -60,7 +87,7 @@ export const AccountingForm = () => {
                         {errors.concept && touched.concept && errors.concept}
                     </FormHelperText>
 
-                    <Button type="submit" variant="contained" disabled={isValid || isSubmitting}>
+                    <Button type="submit" variant="contained" disabled={!isValid || isSubmitting}>
                         Guardar
                     </Button>
                 </form>

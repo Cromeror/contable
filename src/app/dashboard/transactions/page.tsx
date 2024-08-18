@@ -1,11 +1,10 @@
 'use client'
 import React, { useState } from 'react';
 import { Table } from '@/components/Table';
-import { TopBar } from '@/components/TopBar';
-import { Button, Grid, MenuItem, Pagination, TextField, Typography } from '@mui/material';
+import { Button, Drawer, Grid, Pagination, Typography } from '@mui/material';
+import { TransactionForm } from '@/components/TransactionForm';
 
 const Transaction = () => {
-
     const [rowData, setRowData] = useState([
         { account: "Tesla", credit: "Model Y", debit: 64950, date: "2024-08-10" },
         { account: "Ford", credit: "F-Series", debit: 33850, date: "2024-08-12" },
@@ -20,29 +19,21 @@ const Transaction = () => {
         { field: "attachments", headerName: "Archivos", width: 150 },
     ]);
 
+    const [openNewAccountForm, setOpenNewAccountForm] = useState(false);
+
+    const toggleDrawer = () => () => {
+        setOpenNewAccountForm(!openNewAccountForm);
+    };
+
     return (
         <div>
             <Grid container spacing={2} direction={'column'} style={{ padding: 20 }}>
-                <Grid item container xs={12} sm={6}>
-                    <Typography>Filtros</Typography>
-                    <Grid container spacing={2} alignItems={'center'}>
-                        <Grid item>
-                            <TextField label="Cuenta" />
-                        </Grid>
-                        <Grid item sm={2}>
-                            <TextField
-                                id="outlined-select-currency"
-                                select
-                                label="Tipo de transacción"
-                                fullWidth
-                            >
-                                <MenuItem value={10}>Debito</MenuItem>
-                                <MenuItem value={20}>Credito</MenuItem>
-                            </TextField>
-                        </Grid>
-                        <Grid item>
-                            <Button variant='text'>Limpiar</Button>
-                        </Grid>
+                <Grid item container xs={12} justifyContent={"space-between"} alignItems={"center"}>
+                    <Grid item container xs={12} sm={6}>
+                        <Typography variant="subtitle2" gutterBottom>Movimientos</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Button variant='contained' onClick={toggleDrawer()}>Agregar movimiento</Button>
                     </Grid>
                 </Grid>
                 <Grid item container spacing={1} direction={'column'} alignItems={"flex-end"}>
@@ -54,6 +45,18 @@ const Transaction = () => {
                     </Grid>
                 </Grid>
             </Grid>
+            <Drawer
+                anchor={"right"}
+                open={openNewAccountForm}
+                onClose={toggleDrawer()}
+            >
+                <div className='px-4 py-8 flex flex-col gap-4'>
+                    <Typography variant="h6">
+                        Agregar movimiento
+                    </Typography>
+                    <TransactionForm />
+                </div>
+            </Drawer>
         </div>
     );
 };
