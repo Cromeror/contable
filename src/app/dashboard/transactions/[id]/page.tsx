@@ -14,7 +14,6 @@ const transactions = [
 const TransactionDetail = () => {
     return (
         <div>
-            <SideBar />
             <Table />
             <h1>Vista Condddtable</h1>
             <table>

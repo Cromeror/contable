@@ -15,8 +15,7 @@ export const themeOptions: ThemeOptions = {
             styleOverrides: {
                 subtitle2: {
                     fontSize: 16,
-                    color: '#3f51b5',
-                    fontWeight: 600,
+                        fontWeight: 600,
                 },
             },
         },

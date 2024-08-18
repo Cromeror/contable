@@ -2,26 +2,15 @@
 import { AccountingForm } from '@/components/AccountingForm';
 import { Search } from '@/components/Search';
 import { Table } from '@/components/Table';
-import { Button, Drawer, Grid, Pagination, Typography } from '@mui/material';
-import React, { useState } from 'react';
-
-// Datos de ejemplo
-const transactions = [
-    { id: 1, description: 'Compra de material de oficina', date: '2024-08-10', amount: 150.75 },
-    { id: 2, description: 'Pago de servicios', date: '2024-08-12', amount: 75.00 },
-    { id: 3, description: 'Venta de producto X', date: '2024-08-13', amount: 300.00 },
-];
+import { Button, Divider, Drawer, Grid, Pagination, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
 const Accounting = () => {
-    const [rowData, setRowData] = useState([
-        { account: "Tesla", concept: "Model Y" },
-        { account: "Ford", concept: "F-Series" },
-        { account: "Toyota", concept: "Corolla" },
-    ]);
+    const [rowData, setRowData] = useState([]);
 
     const [colDefs, setColDefs] = useState([
-        { field: "account", headerName: "Cuenta", width: 150 },
-        { field: "concept", headerName: "Concepto", width: 150 },
+        { field: "code", headerName: "Cuenta", width: 150 },
+        { field: "description", headerName: "Concepto", width: 150 },
         { headerName: "Acciones", width: 150 },
     ]);
 
@@ -31,9 +20,23 @@ const Accounting = () => {
         setOpenNewAccountForm(!openNewAccountForm);
     };
 
+    useEffect(() => {
+        fetch('/api/chart-of-accounts')
+            .then(res => res.json())
+            .then(data => setRowData(data));
+    }, []);
+
     return (
         <div>
             <Grid container spacing={2} direction={'column'} style={{ padding: 20 }}>
+                <Grid item container xs={12}>
+                    <Button>Nuevo comprobante</Button>
+                    <Grid item>
+                        <Divider orientation='vertical' />
+                    </Grid>
+                    <Button>Nuevo comprobante</Button>
+                </Grid>
+                <Divider />
                 <Grid item container xs={12} justifyContent={"space-between"} alignItems={"center"}>
                     <Grid item container xs={12} sm={6}>
                         <Typography variant="subtitle2" gutterBottom>Cuentas</Typography>

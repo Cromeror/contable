@@ -72,6 +72,7 @@ export const TransactionForm = () => {
                             <FormControlLabel value="credit" control={<Radio />} label="Crédito" />
                         </RadioGroup>
                     </FormControl>
+                    <TextField label="Monto"/>
                     <TextField
                         label="Concepto"
                         error={!!(errors.concept && touched.concept && errors.concept)}
