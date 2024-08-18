@@ -1,6 +1,5 @@
 'use client'
 import { Table } from '@/components/Table';
-import { TopBar } from '@/components/TopBar';
 import { Button, Grid, MenuItem, Pagination, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -26,7 +25,6 @@ const Accounting = () => {
 
     return (
         <div>
-            <TopBar />
             <Grid container spacing={2} direction={'column'} style={{ padding: 20 }}>
                 <Grid item container xs={12} justifyContent={"space-between"} alignItems={"center"}>
                     <Grid item container xs={12} sm={6}>

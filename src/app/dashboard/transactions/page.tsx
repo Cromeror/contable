@@ -22,7 +22,6 @@ const Transaction = () => {
 
     return (
         <div>
-            <TopBar />
             <Grid container spacing={2} direction={'column'} style={{ padding: 20 }}>
                 <Grid item container xs={12} sm={6}>
                     <Typography>Filtros</Typography>
