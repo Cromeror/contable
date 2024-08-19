@@ -7,12 +7,20 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import classNames from 'classnames';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { MODAL_REGISTERED, modalManagerStore, openModal } from '@/redux/modalManagerSlice';
 
 type MenuSetting = {
   title: string;
   icon: any;
   path: string;
   children?: MenuSetting[];
+}
+
+type ActionSetting = {
+  title: string;
+  icon: any;
+  path?: string;
+  onClick?: () => void;
 }
 
 const menuSettings: MenuSetting[] = [
@@ -40,22 +48,28 @@ const menuSettings: MenuSetting[] = [
   }
 ]
 
-const actions = [
-  {
-    title: 'Nuevo comprobante',
-    icon: ReceiptIcon,
-    path: '/dashboard/transactions/bills',
-  },
-  {
-    title: 'Nueva factura',
-    icon: ReceiptIcon,
-    path: '/dashboard/transactions/invoices',
-  },
-]
-
 export const SideBar = () => {
   const router = useRouter()
   const pathname = usePathname()
+  modalManagerStore.dispatch(openModal(MODAL_REGISTERED.INVOICE_FORM))
+
+  const actions: ActionSetting[] = [
+    {
+      title: 'Nuevo comprobante',
+      icon: ReceiptIcon,
+      path: '/dashboard/transactions/bills',
+    },
+    {
+      title: 'Nueva factura',
+      icon: ReceiptIcon,
+      onClick: () => modalManagerStore.dispatch(openModal(MODAL_REGISTERED.INVOICE_FORM)),
+      path: '/dashboard/transactions/invoices',
+    },
+  ]
+
+  const actionClickHandler = (action: ActionSetting) => {
+    action.onClick && action.onClick()
+  }
 
   return (
     <Grid container spacing={2} direction={"column"} className='h-full max-h-[99.9vh]'>
@@ -105,6 +119,7 @@ export const SideBar = () => {
           <Grid item key={action.title.replace(' ', '_')}>
             <Button
               className='w-full'
+              onClick={() => actionClickHandler(action)}
             >
               <span className={classNames(' text-left w-full decoration-2 underline-offset-8 transition-transform', {
                 underline: pathname === action.path,
