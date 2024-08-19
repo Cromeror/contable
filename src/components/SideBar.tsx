@@ -51,7 +51,6 @@ const menuSettings: MenuSetting[] = [
 export const SideBar = () => {
   const router = useRouter()
   const pathname = usePathname()
-  modalManagerStore.dispatch(openModal(MODAL_REGISTERED.INVOICE_FORM))
 
   const actions: ActionSetting[] = [
     {
