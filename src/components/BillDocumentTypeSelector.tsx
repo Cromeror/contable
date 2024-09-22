@@ -1,3 +1,4 @@
+import { MenuItem, Select } from "@mui/material"
 
 
 enum BILL_DOCUMENT_TYPES {
@@ -39,14 +40,14 @@ type Props = {
 
 export const BillDocumentTypeSelector = (props: Props) => {
     return (
-        <div>
+        <Select>
             {
                 BILL_DOCUMENT_TYPES_OPTIONS.map(option => (
-                    <div key={option.value}>
+                    <MenuItem key={option.value} value={option.value}>
                         {option.label}
-                    </div>
+                    </MenuItem>
                 ))
             }
-        </div>
+        </Select>
     )
 }

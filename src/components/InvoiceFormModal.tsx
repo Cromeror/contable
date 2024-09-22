@@ -1,4 +1,3 @@
-import { Box } from "@mui/material"
 import { Modal } from "./Modal"
 import { InvoiceForm } from "./InvoiceForm"
 
@@ -14,7 +13,7 @@ export const InvoiceFormModal = ({ open, onClose }: Props) => {
             onClose={onClose}
             title="Factura"
         >
-            <div className="w-[800px]">
+            <div className="min-w-[800px] full-width">
                 <InvoiceForm />
             </div>
         </Modal>

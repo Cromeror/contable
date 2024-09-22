@@ -1,4 +1,4 @@
-import { Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from "@mui/material";
+import { Autocomplete, Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Formik } from "formik";
@@ -44,11 +44,47 @@ export const InvoiceForm = () => {
                     <BillDocumentTypeSelector />
                     <DatePicker
                         label="Basic date picker"
-                        onChange={(value)=>{
+                        onChange={(value) => {
                             console.log(value);
-                           // handleChange("date")(dayjs());
+                            // handleChange("date")(dayjs());
                         }}
                         value={values.date}
+                    />
+                    <Autocomplete
+                        disablePortal
+                        options={[
+                            {
+                                label: 'Proveedor1',
+                                value: '1',
+                            },
+                            {
+                                label: 'Proveedor2',
+                                value: '2',
+                            },
+                            {
+                                label: 'Proveedor3',
+                                value: '3',
+                            }
+                        ]}
+                        renderInput={(params) => <TextField {...params} label="Proveedor" />}
+                    />
+                    <Autocomplete
+                        disablePortal
+                        options={[
+                            {
+                                label: 'Contacto1',
+                                value: '1',
+                            },
+                            {
+                                label: 'Contacto2',
+                                value: '2',
+                            },
+                            {
+                                label: 'Contacto3',
+                                value: '3',
+                            }
+                        ]}
+                        renderInput={(params) => <TextField {...params} label="Contacto" />}
                     />
                     <TextField
                         label="Número de cuenta"
@@ -61,7 +97,7 @@ export const InvoiceForm = () => {
                     <FormHelperText error={!!(errors.account && touched.account && errors.account)}>
                         {errors.account && touched.account && errors.account}
                     </FormHelperText>
-                    <FormControl>
+{/*                     <FormControl>
                         <FormLabel id="type-moviment-field">Tipo de transacción</FormLabel>
                         <RadioGroup
                             aria-labelledby="type-moviment-field"
@@ -73,8 +109,8 @@ export const InvoiceForm = () => {
                             <FormControlLabel value="debit" control={<Radio />} label="Débito" />
                             <FormControlLabel value="credit" control={<Radio />} label="Crédito" />
                         </RadioGroup>
-                    </FormControl>
-                    <TextField label="Monto"/>
+                    </FormControl> */}
+                    <TextField label="Monto" />
                     <TextField
                         label="Concepto"
                         error={!!(errors.concept && touched.concept && errors.concept)}

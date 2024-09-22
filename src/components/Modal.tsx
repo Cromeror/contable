@@ -52,14 +52,14 @@ export const Modal = ({ open, onClose, title, children }: Props) => {
                         </Grid>
                     </ModalContent>
                 </CardContent>
-                <CardActions>
+                {/* <CardActions>
                     <Button>
                         Cancelar
                     </Button>
                     <Button>
                         Guardar
                     </Button>
-                </CardActions>
+                </CardActions> */}
             </Card>
         </MuiModal>
     )
