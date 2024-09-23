@@ -13,7 +13,7 @@ export const InvoiceFormModal = ({ open, onClose }: Props) => {
             onClose={onClose}
             title="Factura"
         >
-            <div className="min-w-[800px] full-width">
+            <div className="xs:min-w-[75vw] sm:min-w-[75vw] md:min-w-[75vw] lg:min-w-[77vw] xl:min-w-[77vw]">
                 <InvoiceForm />
             </div>
         </Modal>

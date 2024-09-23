@@ -1,9 +1,14 @@
-import { Autocomplete, Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from "@mui/material";
+import { Autocomplete, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, Icon, IconButton, Radio, RadioGroup, Stack, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Formik } from "formik";
 import * as Yup from 'yup';
 import { BillDocumentTypeSelector } from "./BillDocumentTypeSelector";
+import { Table } from "./Table";
+import { ProviderSelector } from "./ProviderSelector";
+import { Check, Edit } from "@mui/icons-material";
+import { InvoiceItem } from "./InvoiceItem";
+import { InvoiceHeader } from "./InvoiceHeader";
 
 const SignupSchema = Yup.object().shape({
     date: Yup.date().required('La fecha es requerida'),
@@ -40,53 +45,72 @@ export const InvoiceForm = () => {
                 isValid,
                 isSubmitting,
             }) => (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
-                    <BillDocumentTypeSelector />
-                    <DatePicker
-                        label="Basic date picker"
-                        onChange={(value) => {
-                            console.log(value);
-                            // handleChange("date")(dayjs());
-                        }}
-                        value={values.date}
-                    />
-                    <Autocomplete
-                        disablePortal
-                        options={[
-                            {
-                                label: 'Proveedor1',
-                                value: '1',
-                            },
-                            {
-                                label: 'Proveedor2',
-                                value: '2',
-                            },
-                            {
-                                label: 'Proveedor3',
-                                value: '3',
-                            }
-                        ]}
-                        renderInput={(params) => <TextField {...params} label="Proveedor" />}
-                    />
-                    <Autocomplete
-                        disablePortal
-                        options={[
-                            {
-                                label: 'Contacto1',
-                                value: '1',
-                            },
-                            {
-                                label: 'Contacto2',
-                                value: '2',
-                            },
-                            {
-                                label: 'Contacto3',
-                                value: '3',
-                            }
-                        ]}
-                        renderInput={(params) => <TextField {...params} label="Contacto" />}
-                    />
-                    <TextField
+                <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px] min-h-[75vh] justify-between">
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+                                <Stack direction="row" alignItems="center">
+                                    <Typography sx={{ fontWeight: 'bold', color: 'gray' }}>
+                                        09/09/2023
+                                    </Typography>
+                                    <IconButton>
+                                        <Edit sx={{ color: 'gray', fontSize: 16 }} />
+                                    </IconButton>
+                                </Stack>
+                                <Typography sx={{ fontStyle: 'italic', color: 'gray', fontWeight: 'bold' }}>
+                                    Factura #123456
+                                </Typography>
+                            </Stack>
+                            <Stack spacing={1}>
+                                <ProviderSelector dataSource={[
+                                    {
+                                        label: 'Proveedor1',
+                                        name: 'Cristobal Romero',
+                                        contact: {
+                                            name: 'Cristobal Romero',
+                                            email: 'cristobal.romero@gmail.com',
+                                            phone: '+56 987654321',
+                                        },
+                                    },
+                                    {
+                                        label: 'Proveedor2',
+                                        name: 'Cristobal Romero',
+                                        contact: {
+                                            name: 'Cristobal Romero',
+                                            email: 'cristobal.romero@gmail.com',
+                                            phone: '+56 987654321',
+                                        },
+                                    },
+                                    {
+                                        label: 'Proveedor3',
+                                        name: 'Cristobal Romero',
+                                        contact: {
+                                            name: 'Cristobal Romero',
+                                            email: 'cristobal.romero@gmail.com',
+                                            phone: '+56 987654321',
+                                        }
+                                    }
+                                ]} />
+                                <FormHelperText error={!!(errors.concept && touched.concept && errors.concept)}>
+                                    {errors.concept && touched.concept && errors.concept}
+                                </FormHelperText>
+                                <BillDocumentTypeSelector />
+                                {/*                                 <DatePicker
+                                    label="Basic date picker"
+                                    onChange={(value) => {
+                                        console.log(value);
+                                        // handleChange("date")(dayjs());
+                                    }}
+                                    value={values.date}
+                                /> */}
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <FormControlLabel control={<Checkbox defaultChecked />} label="IVA / Impoconsumo incluido" />
+                                </Stack>
+                            </Stack>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                Formas de pago
+                            </Typography>
+                            {/*                     <TextField
                         label="Número de cuenta"
                         name="account"
                         error={!!(errors.account && touched.account && errors.account)}
@@ -96,34 +120,20 @@ export const InvoiceForm = () => {
                     />
                     <FormHelperText error={!!(errors.account && touched.account && errors.account)}>
                         {errors.account && touched.account && errors.account}
-                    </FormHelperText>
-{/*                     <FormControl>
-                        <FormLabel id="type-moviment-field">Tipo de transacción</FormLabel>
-                        <RadioGroup
-                            aria-labelledby="type-moviment-field"
-                            name="type"
-                            row
-                            onChange={handleChange}
-                            value={values.type}
-                        >
-                            <FormControlLabel value="debit" control={<Radio />} label="Débito" />
-                            <FormControlLabel value="credit" control={<Radio />} label="Crédito" />
-                        </RadioGroup>
-                    </FormControl> */}
-                    <TextField label="Monto" />
-                    <TextField
-                        label="Concepto"
-                        error={!!(errors.concept && touched.concept && errors.concept)}
-                        name="concept"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        multiline
-                        rows={3}
-                        value={values.concept}
-                    />
-                    <FormHelperText error={!!(errors.concept && touched.concept && errors.concept)}>
-                        {errors.concept && touched.concept && errors.concept}
-                    </FormHelperText>
+                    </FormHelperText> */}
+
+                        </Grid>
+                        <Grid item xs={6}>
+                            <InvoiceHeader />
+                            <Stack>
+                                {
+                                    Array.from({ length: 10 }).map((_, index) => (
+                                        <InvoiceItem key={index} />
+                                    ))
+                                }
+                            </Stack>
+                        </Grid>
+                    </Grid>
 
                     <Button type="submit" variant="contained" disabled={!isValid || isSubmitting}>
                         Guardar

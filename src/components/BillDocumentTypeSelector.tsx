@@ -36,11 +36,12 @@ const BILL_DOCUMENT_TYPES_OPTIONS = Object.freeze(
 
 type Props = {
     onChange?: (type: string) => void,
+    className?: string,
 }
 
 export const BillDocumentTypeSelector = (props: Props) => {
     return (
-        <Select>
+        <Select className={props.className}>
             {
                 BILL_DOCUMENT_TYPES_OPTIONS.map(option => (
                     <MenuItem key={option.value} value={option.value}>

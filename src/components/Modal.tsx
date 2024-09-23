@@ -26,13 +26,14 @@ export const Modal = ({ open, onClose, title, children }: Props) => {
             <Card
                 className={classNames(
                     "absolute translate-y-[-50%] translate-x-[-50%] top-[50%] left-[50%]",
-                    "max-w-[80vw] min-w-[30%] max-h-[90vh] min-h-[50px]"
+                    "max-w-[80vw] min-w-[30%] max-h-[90vh] min-h-[50px]",
                 )}
+                sx={{ overflow: "auto", }}
             >
                 <CardContent>
-                    <ModalContent >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
+                    <ModalContent>
+                        <Grid container spacing={2} className="position-relative">
+                            <Grid item xs={12} className="position-absolute top-0">
                                 <Grid container justifyContent={"space-between"} alignItems={"center"}>
                                     <Grid item>
                                         <Typography variant="subtitle2" component="h2" className="text-gray-600">
