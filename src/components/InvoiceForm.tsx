@@ -1,4 +1,4 @@
-import { Autocomplete, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, Icon, IconButton, Radio, RadioGroup, Stack, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Card, Checkbox, Divider, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, Icon, IconButton, Radio, RadioGroup, Stack, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Formik } from "formik";
@@ -9,6 +9,7 @@ import { ProviderSelector } from "./ProviderSelector";
 import { Check, Edit } from "@mui/icons-material";
 import { InvoiceItem } from "./InvoiceItem";
 import { InvoiceHeader } from "./InvoiceHeader";
+import { InvoiceSummary } from "./InvoiceSummary";
 
 const SignupSchema = Yup.object().shape({
     date: Yup.date().required('La fecha es requerida'),
@@ -47,7 +48,7 @@ export const InvoiceForm = () => {
             }) => (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px] min-h-[75vh] justify-between">
                     <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                             <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                                 <Stack direction="row" alignItems="center">
                                     <Typography sx={{ fontWeight: 'bold', color: 'gray' }}>
@@ -121,16 +122,32 @@ export const InvoiceForm = () => {
                     <FormHelperText error={!!(errors.account && touched.account && errors.account)}>
                         {errors.account && touched.account && errors.account}
                     </FormHelperText> */}
-
                         </Grid>
-                        <Grid item xs={6}>
-                            <InvoiceHeader />
-                            <Stack>
-                                {
-                                    Array.from({ length: 10 }).map((_, index) => (
-                                        <InvoiceItem key={index} />
-                                    ))
-                                }
+                        <Grid item xs={8} >
+                            <Stack spacing={2} sx={{ padding: 4, backgroundColor: '#f5f5f5', borderRadius: 4 }}>
+                                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+                                    <Typography sx={{ fontWeight: 'bold', textTransform: 'uppercase' }} variant="h6">
+                                        Productos
+                                    </Typography>
+                                </Stack>
+                                <Card sx={{ p: 2, minHeight: 500, borderRadius: 4 }}>
+                                    <Stack spacing={1}>
+                                        <Typography sx={{ fontWeight: 'bold', textTransform: 'uppercase' }} >
+                                            Factura #123456
+                                        </Typography>
+                                        <Box>
+                                            <InvoiceHeader />
+                                            <Stack>
+                                                {
+                                                    Array.from({ length: 10 }).map((_, index) => (
+                                                        <InvoiceItem key={index} />
+                                                    ))
+                                                }
+                                            </Stack>
+                                        </Box>
+                                        <InvoiceSummary />
+                                    </Stack>
+                                </Card>
                             </Stack>
                         </Grid>
                     </Grid>

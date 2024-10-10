@@ -1,24 +1,40 @@
-import { Grid, Stack, Typography } from "@mui/material"
+import { Grid, SxProps, Theme, Typography } from "@mui/material"
+
+type ColumnHeaderProps = {
+    children: React.ReactNode,
+    sx?: SxProps<Theme>
+}
+
+const ColumnHeader = ({ children, sx }: ColumnHeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                fontWeight: 'bold',
+                color: 'gray',
+                fontSize: 12,
+                textTransform: 'uppercase',
+                ...sx,
+            }}>
+            {children}
+        </Typography>
+    )
+}
 
 export const InvoiceHeader = () => {
     return (
-        <Stack
-            direction="row"
-            alignItems="center"
-            spacing={2}
-            className="rounded p-3 bg-gray-100 uppercase">
-            <Typography sx={{ fontWeight: 'bold', color: 'gray' }}>
-                Descripción
-            </Typography>
-            <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                Cantidad
-            </Typography>
-            <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                Precio unitario
-            </Typography>
-            <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                Total
-            </Typography>
-        </Stack>
+        <Grid container className="rounded p-1 px-4 bg-gray-100 uppercase">
+            <Grid item sm={6}>
+                <ColumnHeader>Descripción</ColumnHeader>
+            </Grid>
+            <Grid item sm={1.5} >
+                <ColumnHeader sx={{ textAlign: 'center' }}>Cantidad</ColumnHeader>
+            </Grid>
+            <Grid item sm={2.5} sx={{ textAlign: 'right' }}>
+                <ColumnHeader>Precio unitario</ColumnHeader>
+            </Grid>
+            <Grid item sm={2} sx={{ textAlign: 'right' }}>
+                <ColumnHeader>Total</ColumnHeader>
+            </Grid>
+        </Grid>
     )
 }
