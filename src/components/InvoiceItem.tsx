@@ -1,4 +1,4 @@
-import { Divider, Grid, Stack, SxProps, Theme, Typography } from "@mui/material"
+import { Box, Divider, Grid, Stack, SxProps, Theme, Typography } from "@mui/material"
 
 type ColumnItemProps = {
     children: React.ReactNode,
@@ -9,8 +9,7 @@ const ColumnItem = ({ children, sx }: ColumnItemProps) => {
     return (
         <Typography
             sx={{
-                fontWeight: 'bold',
-                fontSize: 12,
+                fontSize: 14,
                 textTransform: 'capitalize',
                 ...sx,
             }}>
@@ -21,25 +20,36 @@ const ColumnItem = ({ children, sx }: ColumnItemProps) => {
 
 export const InvoiceItem = () => {
     return (
-        <Grid container className="p-1 px-4 min-h-[30px] border-b-[1px]" alignItems={'center'}>
-            <Grid item sm={6}>
-                <Stack direction={'row'} alignItems={'baseline'} spacing={1}>
-                    <ColumnItem sx={{ color: 'gray', fontWeight: "normal" }}>
-                        22952295 /
+        <Grid container className="pb-2 px-4 min-h-[30px] border-b-[1px]" alignItems={'flex-end'} spacing={2}>
+            <Grid item sm={7}>
+                <Stack>
+                    <Stack direction={'row'} alignItems={'baseline'} spacing={1}>
+                        <ColumnItem sx={{ color: '#131f2f', fontSize: 16, fontWeight: 600 }}>
+                            Landing Page
+                        </ColumnItem>
+                        <ColumnItem sx={{ color: '#5f6c86', fontSize: 12 }}>
+                            / 22952295
+                        </ColumnItem>
+                    </Stack>
+                    <ColumnItem sx={{ color: '#5f6c86', fontWeight: "normal" }}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                     </ColumnItem>
-                    <ColumnItem>Product Name</ColumnItem>
                 </Stack>
             </Grid>
-            <Grid item sm={1.5} >
-                <ColumnItem sx={{ textAlign: 'center' }}>
-                    1
-                </ColumnItem>
-            </Grid>
-            <Grid item sm={2.5} sx={{ textAlign: 'right' }}>
-                <ColumnItem>$100</ColumnItem>
-            </Grid>
-            <Grid item sm={2} sx={{ textAlign: 'right' }}>
-                <ColumnItem>$100</ColumnItem>
+            <Grid item sm={5} sx={{ textAlign: 'right' }}>
+                <Stack justifyContent={'flex-end'} alignItems={'flex-end'}>
+                    <ColumnItem sx={{ color: '#131f2f', fontSize: 16, fontWeight: 600 }}>
+                        $3.000
+                    </ColumnItem>
+                    <ColumnItem>1 unit x $3.000</ColumnItem>
+                    <Stack direction={'row'} justifyContent={'flex-end'} spacing={1} sx={{ pt: 1 }} flexWrap={'wrap'}>
+                        <ColumnItem>10% IVA</ColumnItem>
+                        <Divider orientation='vertical' sx={{ borderColor: '#5f6c86', height: 18 }} />
+                        <ColumnItem>20% Retefuente</ColumnItem>
+                        <Divider orientation='vertical' sx={{ borderColor: '#5f6c86', height: 18 }} />
+                        <ColumnItem>$20.000 Desc</ColumnItem>
+                    </Stack>
+                </Stack>
             </Grid>
         </Grid >
     )

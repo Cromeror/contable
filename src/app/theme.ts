@@ -1,4 +1,8 @@
 import { ThemeOptions } from '@mui/material/styles';
+import "@fontsource/open-sans"; 
+import "@fontsource/open-sans/300.css";
+import "@fontsource/open-sans/400.css";
+import "@fontsource/open-sans/600.css";
 
 export const themeOptions: ThemeOptions = {
     palette: {
@@ -10,12 +14,15 @@ export const themeOptions: ThemeOptions = {
             main: '#f50057',
         },
     },
+    typography: {
+        fontFamily: 'Open Sans',
+    },
     components: {
         MuiTypography: {
             styleOverrides: {
                 subtitle2: {
                     fontSize: 16,
-                        fontWeight: 600,
+                    fontWeight: 600,
                 },
             },
         },
@@ -35,6 +42,12 @@ export const themeOptions: ThemeOptions = {
                         '&:hover': {
                             backgroundColor: 'secondary.dark',
                         },
+                    },
+                },
+                {
+                    props: { variant: 'outlined' },
+                    style: {
+                        borderRadius: 50,
                     },
                 }
             ],
