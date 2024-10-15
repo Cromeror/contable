@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Contact {
+  id      BigInt  @id @default(autoincrement())
+  name    String
+  nit     String
+  address String?
+  phone   String?
+  type    String
+}
+
+model Voucher {
+  id          BigInt   @id @default(autoincrement())
+  type        String
+  date        DateTime
+  contactId   BigInt?
+  amount      Decimal
+  description String?
+  status      String?
+}
+
+model VoucherItem {
+  id        BigInt  @id @default(autoincrement())
+  voucherId BigInt
+  pucId     BigInt
+  total     Decimal
+  discount  Decimal @default(0)
+  quantity  Decimal
+  unitPrice Decimal
+}
+
+model Puc {
+  id          BigInt  @id @default(autoincrement())
+  parentId    BigInt?
+  code        String
+  description String
+}
+
+model Tax {
+  id         BigInt  @id @default(autoincrement())
+  name       String
+  percentage Decimal
+}
+
+model VoucherItemTax {
+  id            BigInt  @id @default(autoincrement())
+  voucherItemId BigInt
+  taxId         BigInt
+  value         Decimal
+}
