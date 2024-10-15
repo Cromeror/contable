@@ -1,5 +1,5 @@
 import { Table } from "@/components/Table"
-import { pucQuery } from "@/queries/pucQueries";
+import { usePucQuery } from "@/queries/pucQueries";
 import { Grid, Pagination } from "@mui/material"
 
 const colDefs = [
@@ -9,7 +9,7 @@ const colDefs = [
 ]
 
 export const PucTable = () => {
-    const { data, isLoading, error } = pucQuery()
+    const { data, isLoading, error } = usePucQuery()
     return (
         <Grid item container spacing={1} direction={'column'} alignItems={"flex-end"}>
             <Grid item xs={12} style={{ width: '100%' }}>

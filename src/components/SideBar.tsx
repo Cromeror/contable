@@ -8,6 +8,7 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import classNames from 'classnames';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { MODAL_REGISTERED, modalManagerStore, openModal } from '@/redux/modalManagerSlice';
+import Link from 'next/link';
 
 type MenuSetting = {
   title: string;
@@ -19,7 +20,7 @@ type MenuSetting = {
 type ActionSetting = {
   title: string;
   icon: any;
-  path?: string;
+  path: string;
   onClick?: () => void;
 }
 
@@ -61,8 +62,8 @@ export const SideBar = () => {
     {
       title: 'Nueva factura',
       icon: ReceiptIcon,
-      onClick: () => modalManagerStore.dispatch(openModal(MODAL_REGISTERED.INVOICE_FORM)),
-      path: '/dashboard/transactions/invoices',
+      //onClick: () => modalManagerStore.dispatch(openModal(MODAL_REGISTERED.INVOICE_FORM)),
+      path: '/dashboard/documents',
     },
   ]
 
@@ -120,11 +121,11 @@ export const SideBar = () => {
               className='w-full'
               onClick={() => actionClickHandler(action)}
             >
-              <span className={classNames(' text-left w-full decoration-2 underline-offset-8 transition-transform', {
+              <Link href={action.path} className={classNames(' text-left w-full decoration-2 underline-offset-8 transition-transform', {
                 underline: pathname === action.path,
               })}>
                 {action.title}
-              </span>
+              </Link>
             </Button>
           </Grid>
         ))}
