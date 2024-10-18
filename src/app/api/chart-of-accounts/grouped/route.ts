@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import puc_data from "../puc_data";
-import { AccountItem } from "../definitions";
+import { PucAccount } from "../../puc/definitions";
 
-const groupByParent = (dataArray: AccountItem[]): (AccountItem | { children: AccountItem[] })[] => {
+const groupByParent = (dataArray: PucAccount[]): (PucAccount | { children: PucAccount[] })[] => {
   const map: any = {};
 
-  dataArray.forEach((item: AccountItem) => {
+  dataArray.forEach((item: PucAccount) => {
     map[item.code] = { ...item, children: [] };
   });
 
@@ -25,6 +25,6 @@ const groupByParent = (dataArray: AccountItem[]): (AccountItem | { children: Acc
 }
 
 export async function GET(request: Request) {
-  const filteredData = groupByParent(puc_data as AccountItem[])
+  const filteredData = groupByParent(puc_data as PucAccount[])
   return NextResponse.json(filteredData);
 }

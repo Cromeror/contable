@@ -1,16 +1,12 @@
 'use client'
-import { AccountingForm } from '@/components/AccountingForm';
 import { Search } from '@/components/Search';
-import { Button, Drawer, Grid, Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { PucTable } from './PucTable';
+import { PucModalForm } from '@/components/PucModalForm';
 
 const Accounting = () => {
     const [openNewAccountForm, setOpenNewAccountForm] = useState(false);
-
-    const toggleDrawer = () => () => {
-        setOpenNewAccountForm(!openNewAccountForm);
-    };
 
     return (
         <div>
@@ -20,7 +16,7 @@ const Accounting = () => {
                         <Typography variant="subtitle2" gutterBottom>Cuentas</Typography>
                     </Grid>
                     <Grid item>
-                        <Button variant='contained' onClick={toggleDrawer()}>Agregar cuenta</Button>
+                        <Button variant='contained' onClick={() => setOpenNewAccountForm(!openNewAccountForm)}>Nueva cuenta</Button>
                     </Grid>
                 </Grid>
                 <Grid item container xs={12} justifyContent={"space-between"} alignItems={"center"}>
@@ -30,18 +26,7 @@ const Accounting = () => {
                 </Grid>
                 <PucTable />
             </Grid>
-            <Drawer
-                anchor={"right"}
-                open={openNewAccountForm}
-                onClose={toggleDrawer()}
-            >
-                <div className='px-4 py-8 flex flex-col gap-4'>
-                    <Typography variant="h6">
-                        Agregar nueva cuenta
-                    </Typography>
-                    <AccountingForm />
-                </div>
-            </Drawer>
+            <PucModalForm open={openNewAccountForm} onClose={() => setOpenNewAccountForm(false)} />
         </div>
     );
 };

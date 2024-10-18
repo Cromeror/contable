@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Contact {
-  id      BigInt  @id @default(autoincrement())
+  id      Int     @id @default(autoincrement())
   name    String
   nit     String
   address String?
@@ -17,19 +17,19 @@ model Contact {
 }
 
 model Voucher {
-  id          BigInt   @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   type        String
   date        DateTime
-  contactId   BigInt?
+  contactId   Int?
   amount      Decimal
   description String?
   status      String?
 }
 
 model VoucherItem {
-  id        BigInt  @id @default(autoincrement())
-  voucherId BigInt
-  pucId     BigInt
+  id        Int     @id @default(autoincrement())
+  voucherId Int
+  pucId     Int
   total     Decimal
   discount  Decimal @default(0)
   quantity  Decimal
@@ -37,21 +37,21 @@ model VoucherItem {
 }
 
 model Puc {
-  id          BigInt  @id @default(autoincrement())
-  parentId    BigInt?
+  id          Int    @id @default(autoincrement())
+  parentId    Int?
   code        String
   description String
 }
 
 model Tax {
-  id         BigInt  @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   name       String
   percentage Decimal
 }
 
 model VoucherItemTax {
-  id            BigInt  @id @default(autoincrement())
-  voucherItemId BigInt
-  taxId         BigInt
+  id            Int     @id @default(autoincrement())
+  voucherItemId Int
+  taxId         Int
   value         Decimal
 }

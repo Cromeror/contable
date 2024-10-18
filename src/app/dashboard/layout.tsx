@@ -1,8 +1,6 @@
 "use client"
-import { GeneralBalanceCard } from "@/components/GeneralBalanceCard"
 import { SideBar } from "@/components/SideBar"
-import { Container, Grid } from "@mui/material"
-import { ModalManager } from "./ModalManager"
+import { Grid } from "@mui/material"
 
 type Props = {
     children: React.ReactNode
@@ -16,7 +14,7 @@ export default function DashboardLayout({ children }: Props) {
                     <SideBar />
                 </Grid>
                 <Grid item container xs={10} className="bg-zinc-100">
-{/*                     <Grid item container xs={12}>
+                    {/*                     <Grid item container xs={12}>
                         <Grid item className="p-6">
                             <GeneralBalanceCard />
                         </Grid>
@@ -27,7 +25,6 @@ export default function DashboardLayout({ children }: Props) {
                     </Grid>
                 </Grid>
             </Grid>
-            <ModalManager />
         </>
     )
 }

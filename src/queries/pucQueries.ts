@@ -1,5 +1,6 @@
 "use client"
-import { useQuery } from "@tanstack/react-query"
+import { PucAccount } from "@/app/api/puc/definitions"
+import { useMutation, useQuery } from "@tanstack/react-query"
 
 export const usePucQuery = (
     params?: {
@@ -12,13 +13,12 @@ export const usePucQuery = (
         // @ts-ignore
         .map((key: string) => `${key}_${params[key]}`)
         .join('_')
-    console.log(uniqueKey);
 
     return useQuery({
         queryKey: ['GET_PUC' + uniqueKey],
         queryFn: async () => {
             const { skip = 0, take = 10 } = params || {}
-            const response = await fetch(`/api/chart-of-accounts?skip=${skip}&take=${take}`)
+            const response = await fetch(`/api/puc?skip=${skip}&take=${take}`)
             const data = await response.json()
             return data
         },
@@ -28,3 +28,15 @@ export const usePucQuery = (
         refetchOnMount: false,
     })
 }
+
+export const useCreatePucMutation = (config?: any) => useMutation<PucAccount>({
+    mutationFn: async (data: PucAccount) => {
+        const response = await fetch('/api/puc', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        })
+        return await response.json()
+    },
+    ...config
+})

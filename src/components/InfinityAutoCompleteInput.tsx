@@ -1,14 +1,23 @@
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Autocomplete, CircularProgress, TextField } from "@mui/material";
+import { Autocomplete, CircularProgress, SxProps, TextField, Theme } from "@mui/material";
 import { usePucQuery } from "@/queries/pucQueries";
+import { PucAccount } from "@/app/api/puc/definitions";
 
-export const InfinityAutoCompleteInput = () => {
+type Props = {
+    sx?: SxProps<Theme>;
+    label?: string;
+    onChage?: (value: any) => void;
+    name?: string;
+    value?: any;
+}
+
+export const InfinityAutoCompleteInput = ({ sx, label, onChage, value, ...props }: Props) => {
     const [options, setOptions] = useState([]);
     const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const { isLoading, refetch } = usePucQuery({
+    const { refetch } = usePucQuery({
         skip: page * 10,
         take: 10,
     })
@@ -48,6 +57,12 @@ export const InfinityAutoCompleteInput = () => {
 
     return (
         <Autocomplete
+            {...props}
+            onChange={(_, newValue) => {
+                const { id } = newValue as PucAccount
+                onChage && onChage(id)
+            }}
+            sx={{ width: '100%', ...sx }}
             options={options}
             loading={loading}
             ListboxProps={{
@@ -58,7 +73,7 @@ export const InfinityAutoCompleteInput = () => {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Agrega un producto"
+                    label={label || 'Agrega un producto'}
                     variant="outlined"
                     InputProps={{
                         ...params.InputProps,

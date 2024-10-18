@@ -1,70 +1,79 @@
-import { Button, FormHelperText, TextField } from "@mui/material";
-import { Formik } from "formik";
+import { Button, FormHelperText, Stack, TextField } from "@mui/material";
+import { useFormik } from "formik";
 import * as Yup from 'yup';
+import { InfinityAutoCompleteInput } from "./InfinityAutoCompleteInput";
+import { useCreatePucMutation } from "@/queries/pucQueries";
 
-const SignupSchema = Yup.object().shape({
-    account: Yup.string().required('El número de cuenta es requerido'),
+const PucSchema = Yup.object().shape({
+    account: Yup.string().required('El número de la subcuenta es requerido'),
     concept: Yup.string().required('El concepto es requerido'),
+    parentId: Yup.string()
 });
 
 const initialValues = {
     account: '',
     concept: '',
+    parentId: '',
 };
 
-export const AccountingForm = () => {
-    return (
-        <Formik
-            initialValues={initialValues}
-            validationSchema={SignupSchema}
-            onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                    alert(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                }, 400);
-            }}
-        >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                isValid,
-                isSubmitting,
-            }) => (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
-                    <TextField
-                        label="Número de cuenta"
-                        name="account"
-                        error={!!(errors.account && touched.account && errors.account)}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.account}
-                    />
-                    <FormHelperText error={!!(errors.account && touched.account && errors.account)}>
-                        {errors.account && touched.account && errors.account}
-                    </FormHelperText>
-                    <TextField
-                        label="Concepto"
-                        error={!!(errors.concept && touched.concept && errors.concept)}
-                        name="concept"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        multiline
-                        rows={3}
-                        value={values.concept}
-                    />
-                    <FormHelperText error={!!(errors.concept && touched.concept && errors.concept)}>
-                        {errors.concept && touched.concept && errors.concept}
-                    </FormHelperText>
+type Props = {
+    controls?: any,
+    defaultValue?: any,
+}
 
-                    <Button type="submit" variant="contained" disabled={isValid || isSubmitting}>
-                        Guardar
-                    </Button>
-                </form>
-            )}
-        </Formik>
+export const AccountingForm = ({ controls, defaultValue }: Props) => {
+    const { mutate } = useCreatePucMutation()
+
+    const { setFieldValue, getFieldProps, errors, touched, handleSubmit, isValid, isSubmitting, values } = useFormik({
+        initialValues: defaultValue || initialValues,
+        validationSchema: PucSchema,
+        onSubmit: (values, { setSubmitting }) => {
+            mutate({
+                code: values.account,
+                description: values.concept,
+                parentId: defaultValue?.id,
+            } as any)
+            setTimeout(() => {
+                alert(JSON.stringify(values, null, 2));
+                setSubmitting(false);
+            }, 400);
+        },
+    })
+
+    return (
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
+            <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+                <InfinityAutoCompleteInput
+                    label="Cuenta principal"
+                    {...getFieldProps('parentId')}
+                    value = {values?.parentId}
+                    onChage={(value) => setFieldValue('parentId', value)}
+                />
+                <TextField
+                    label="Subcuenta"
+                    error={!!(errors.account && touched.account && errors.account)}
+                    {...getFieldProps('account')}
+                />
+            </Stack>
+            <FormHelperText error={!!(errors.account && touched.account && errors.account)}>
+                <> {touched.account && errors.account}</>
+            </FormHelperText>
+            <TextField
+                label="Concepto"
+                error={!!(errors.concept && touched.concept && errors.concept)}
+                multiline
+                rows={3}
+                {...getFieldProps('concept')}
+            />
+            <FormHelperText error={!!(errors.concept && touched.concept && errors.concept)}>
+                <>{touched.concept && errors.concept}</>
+            </FormHelperText>
+            <Stack direction="row" justifyContent="flex-end" spacing={2}>
+                {controls}
+                <Button type="submit" variant="contained" disabled={!isValid || isSubmitting}>
+                    Guardar
+                </Button>
+            </Stack>
+        </form>
     )
 }
