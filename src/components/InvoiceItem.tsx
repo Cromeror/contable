@@ -1,3 +1,4 @@
+import { Product } from "@/app/api/products/definitions"
 import { Box, Divider, Grid, Stack, SxProps, Theme, Typography } from "@mui/material"
 
 type ColumnItemProps = {
@@ -16,6 +17,10 @@ const ColumnItem = ({ children, sx }: ColumnItemProps) => {
             {children}
         </Typography>
     )
+}
+
+type Props = {
+    product: Product
 }
 
 export const InvoiceItem = () => {

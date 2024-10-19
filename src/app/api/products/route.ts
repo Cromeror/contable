@@ -7,21 +7,24 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const skip = (parseInt(searchParams.get('skip') as string)) || 0;
   const take = (parseInt(searchParams.get('take') as string)) || 10;
-  const puc = await prisma.puc.findMany({ take, skip })
+  const product = await prisma.product.findMany({ take, skip })
 
-  return NextResponse.json(puc);
+  return NextResponse.json(product);
 }
 
 export async function POST(request: Request) {
-  const data = await request.json()
+  const { pucId,unitPrice, ...data } = await request.json()
   try {
-    const puc = await prisma.puc.create({ 
+    const product = await prisma.product.create({
       data: {
-        id:(new Date()).getTime(),
         ...data,
+        unitPrice: typeof unitPrice === 'string' ? parseFloat(unitPrice) : unitPrice,
+        puc: {
+          connect: { id: pucId }
+        },
       }
-     })
-    return NextResponse.json(puc);
+    })
+    return NextResponse.json(product);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === 'P2002') {

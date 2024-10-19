@@ -46,6 +46,11 @@ const menuSettings: MenuSetting[] = [
     title: 'Terceros',
     icon: ContentCut,
     path: '/dashboard/third-parties',
+  },
+  {
+    title: 'Products',
+    icon: ContentCut,
+    path: '/dashboard/products',
   }
 ]
 
