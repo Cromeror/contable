@@ -27,20 +27,33 @@ model Voucher {
 }
 
 model VoucherItem {
-  id        Int     @id @default(autoincrement())
-  voucherId Int
-  pucId     Int
-  total     Decimal
-  discount  Decimal @default(0)
-  quantity  Decimal
-  unitPrice Decimal
+  id          Int      @id @default(autoincrement())
+  voucherId   Int
+  description String
+  total       Decimal
+  discount    Decimal  @default(0)
+  quantity    Decimal
+  unitPrice   Decimal
+  product     Product? @relation(fields: [productId], references: [id])
+  productId   Int?
+}
+
+model Product {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String?
+  puc          Puc?          @relation(fields: [pucId], references: [id])
+  pucId        Int?          @unique
+  unitPrice    Decimal
+  voucherItems VoucherItem[]
 }
 
 model Puc {
-  id          Int    @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   parentId    Int?
   code        String
   description String
+  products    Product[]
 }
 
 model Tax {
