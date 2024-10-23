@@ -1,4 +1,4 @@
-import { Button, Divider, FormHelperText, Stack, TextField } from "@mui/material";
+import { Button, CircularProgress, Divider, FormControl, FormHelperText, InputLabel, Stack, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import { InfinityAutoCompleteInput } from "./InfinityAutoCompleteInput";
@@ -28,33 +28,47 @@ const initialValues = {
 type Props = {
     controls?: any,
     defaultValue?: FormValues,
+    onSuccess?: (response: any) => void,
+    onError?: (error: any) => void,
 }
 
-export const ProductForm = ({ controls, defaultValue }: Props) => {
-    const { mutate: createProduct } = useCreateProduct()
-
+export const ProductForm = ({ controls, defaultValue, onSuccess = () => { }, onError }: Props) => {
+    const { mutateAsync, isPending } = useCreateProduct()
     const { handleSubmit, errors, touched, isValid, isSubmitting, values, setFieldValue, getFieldProps } = useFormik({
         initialValues: { ...initialValues, ...defaultValue },
         validationSchema: ValidationSchema,
-        onSubmit: (values) => {
-            createProduct({
-                name: values.name,
-                description: values.description,
-                pucId: values.pucId as number,
-                unitPrice: values.unitPrice as number,
-            })
+        onSubmit: async (values) => {
+            try {
+                onSuccess(
+                    await mutateAsync({
+                        name: values.name,
+                        description: values.description,
+                        pucId: values.pucId as number,
+                        unitPrice: values.unitPrice as number,
+                    }))
+            } catch (error) {
+                onError && onError(error)
+            }
         },
     })
 
     return (
-        <Stack spacing={2} sx={{ padding: 4, backgroundColor: '#fff', borderRadius: 2 }}>
+        <Stack spacing={1} sx={{ backgroundColor: '#fff', borderRadius: 2 }}>
+            <TextField
+                label="Nombre del producto/servicio"
+                error={!!(errors.name && touched.name)}
+                {...getFieldProps('name')}
+            />
+            <FormHelperText error={!!(touched.name && errors.name)}>
+                {errors.name && touched.name && errors.name}
+            </FormHelperText>
+
             <Stack direction={"row"} spacing={2}>
                 <InfinityAutoCompleteInput
                     label={values.pucId ? 'Cuenta principal' : 'Selecciona una cuenta principal'}
-                    {...getFieldProps('pucId')}
                     value={values?.pucId}
                     onChage={(value) => {
-                        setFieldValue('pucId', value)
+                        setFieldValue('pucId', value.id)
                     }}
                 />
                 <TextField
@@ -67,15 +81,8 @@ export const ProductForm = ({ controls, defaultValue }: Props) => {
             <FormHelperText error={!!errors.pucId}>
                 {errors.pucId}
             </FormHelperText>
-            <TextField
-                label="Nombre del producto/servicio"
-                error={!!(errors.name && touched.name)}
-                {...getFieldProps('name')}
-            />
-            <FormHelperText error={!!(touched.name && errors.name)}>
-                {errors.name && touched.name && errors.name}
-            </FormHelperText>
             <TextField label="Descripción" multiline rows={2} {...getFieldProps('description')} />
+            <FormHelperText error={!!(touched.name && errors.name)}></FormHelperText>
             <TextField
                 label="Precio unitario"
                 error={!!(errors.name && touched.name)}
@@ -95,7 +102,7 @@ export const ProductForm = ({ controls, defaultValue }: Props) => {
                     disabled={!isValid || isSubmitting}
                     onClick={() => handleSubmit()}
                 >
-                    Guardar
+                    {isPending && <CircularProgress size={16} sx={{ mr: 1 }} />}  Guardar
                 </Button>
             </Stack>
         </Stack>

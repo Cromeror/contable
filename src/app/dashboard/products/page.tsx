@@ -9,8 +9,6 @@ const ProductsPage = () => {
     const [openNewProductForm, setOpenNewProductForm] = useState(false);
     const { data: products } = useProductsQuery()
 
-    console.log(products);
-
     return (
         <Stack spacing={2}>
             <Stack direction={"row"} justifyContent={"flex-end"} spacing={2}>

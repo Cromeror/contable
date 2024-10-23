@@ -19,6 +19,7 @@ export const ProductModalForm = ({ open, onClose, defaultValue }: Props) => {
                 <Button variant="outlined" onClick={onClose}>
                     Cancelar
                 </Button>}
+                onSuccess={() => onClose()}
             />
         </Modal>
     )
