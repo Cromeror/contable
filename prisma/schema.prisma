@@ -54,6 +54,7 @@ model Puc {
   code        String
   description String
   products    Product[]
+  tag         String?
 }
 
 model Tax {

@@ -3,4 +3,5 @@ export type PucAccount = {
     code: number;
     description: string;
     parentId?: number | null;
+    tag?: string | null;
 }
