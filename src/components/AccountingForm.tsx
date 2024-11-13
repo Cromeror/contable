@@ -28,21 +28,11 @@ const initialValues = {
   parentId: "",
 };
 const PucSchema = Yup.object().shape({
-  accountType: Yup.string().required("Selecciona el tipo de cuenta"),
-  account: Yup.string().when("accountType", (accountType: any, schema) => {
-    if (accountType === "clase") {
-      return schema
-        .matches(/^\d$/, "Clase debe ser un solo dígito")
-        .required("El número de clase es requerido");
-    } else if (accountType === "grupo") {
-      return schema.matches(/^\d$/, "Grupo debe ser un solo dígito");
-    } else if (accountType === "cuenta") {
-      return schema.matches(/^\d{2}$/, "Cuenta debe ser de 2 dígitos");
-    } else if (accountType === "subcuenta") {
-      return schema.matches(/^\d{2}$/, "SubCuenta debe ser de 2 dígitos");
-    }
-    return schema.required("El número de cuenta es requerido");
-  }),
+  parentId: Yup.string().required("Seleccione la cuenta"),
+  concept: Yup.string().required("El concepto es requerido"),
+  account: Yup.string()
+    .matches(/^\d{2,}$/, "Debe contener hasta 2 dígitos")
+    .required("El número de la subcuenta es requerido"),
 });
 type Props = {
   controls?: any;
@@ -84,12 +74,6 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
     setFieldValue("parentId", "");
   }, [values.accountType, setFieldValue]);
 
-  const handleAccountTypeChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFieldValue("accountType", event.target.value as AccountType);
-  };
-
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
       <Stack
@@ -108,6 +92,9 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
           label="Subcuenta"
           error={!!(errors.account && touched.account && errors.account)}
           {...getFieldProps("account")}
+          inputProps={{
+            maxLength: 2,
+          }}
         />
       </Stack>
       <FormHelperText

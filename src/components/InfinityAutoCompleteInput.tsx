@@ -44,7 +44,8 @@ const getPucData = async (params?: {
 }) => {
   const response = await fetch(`/api/puc${buildQuery(params)}`);
   const data = await response.json();
-  return data;
+  const filterData = data.filter((item: any) => item.code.length >= 4);
+  return filterData;
 };
 
 export const InfinityAutoCompleteInput = ({
@@ -111,7 +112,11 @@ export const InfinityAutoCompleteInput = ({
       <TextField
         label={label}
         ref={anchorEl}
-        value={selectedOption?.description}
+        value={
+          selectedOption
+            ? `${selectedOption.code} - ${selectedOption.description}`
+            : ""
+        }
         onClick={() => setShowPopover(true)}
         InputLabelProps={{ shrink: !!selectedOption }}
         fullWidth
@@ -151,7 +156,9 @@ export const InfinityAutoCompleteInput = ({
                   key={option.id}
                   onClick={() => onSelectHandler(option)}
                 >
-                  <ListItemText>{option.code} - {option.description}</ListItemText>
+                  <ListItemText>
+                    {option.code} - {option.description}
+                  </ListItemText>
                 </MenuItem>
               ))}
             </MenuList>
