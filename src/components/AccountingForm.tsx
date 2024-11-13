@@ -8,17 +8,17 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { Form, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import { InfinityAutoCompleteInput } from "./InfinityAutoCompleteInput";
 import { useCreatePucMutation } from "@/queries/pucQueries";
 import React, { useEffect, useState } from "react";
-// type AccountType = "Clase" | "Grupo" | "Cuenta" | "SubCuenta";
+
 enum AccountType {
-  Clase = "Clase",
-  Grupo = "Grupo",
-  Cuenta = "Cuenta",
-  Subcuenta = "Subcuenta",
+  Clase = "class",
+  Grupo = "group",
+  Cuenta = "account",
+  Subcuenta = "subaccount",
 }
 
 const initialValues = {
@@ -92,34 +92,6 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
-      <FormControl component="fieldset">
-        <RadioGroup
-          row
-          value={values.accountType}
-          onChange={handleAccountTypeChange}
-        >
-          <FormControlLabel
-            value={AccountType.Clase}
-            control={<Radio />}
-            label="Clase"
-          />
-          <FormControlLabel
-            value={AccountType.Grupo}
-            control={<Radio />}
-            label="Grupo"
-          />
-          <FormControlLabel
-            value={AccountType.Cuenta}
-            control={<Radio />}
-            label="Cuenta"
-          />
-          <FormControlLabel
-            value={AccountType.Subcuenta}
-            control={<Radio />}
-            label="SubCuenta"
-          />
-        </RadioGroup>
-      </FormControl>
       <Stack
         direction="row"
         justifyContent="space-between"

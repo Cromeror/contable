@@ -16,7 +16,7 @@ const Accounting = () => {
                         <Typography variant="subtitle2" gutterBottom>Cuentas</Typography>
                     </Grid>
                     <Grid item>
-                        <Button variant='contained' onClick={() => setOpenNewAccountForm(!openNewAccountForm)}>Nueva cuenta</Button>
+                        <Button variant='contained' onClick={() => setOpenNewAccountForm(!openNewAccountForm)}>Agregar cuenta</Button>
                     </Grid>
                 </Grid>
                 <Grid item container xs={12} justifyContent={"space-between"} alignItems={"center"}>
