@@ -151,7 +151,7 @@ export const InfinityAutoCompleteInput = ({
                   key={option.id}
                   onClick={() => onSelectHandler(option)}
                 >
-                  <ListItemText>{option.description}</ListItemText>
+                  <ListItemText>{option.code} - {option.description}</ListItemText>
                 </MenuItem>
               ))}
             </MenuList>

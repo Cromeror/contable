@@ -14,6 +14,9 @@ export const ProductModalForm = ({ open, onClose, defaultValue }: Props) => {
             open={open}
             onClose={onClose}
             title={defaultValue ? "Editar Cuenta" : "Registrar Cuenta"}
+            sx={{
+                minWidth: "50%"
+            }}
         >
             <ProductForm controls={
                 <Button variant="outlined" onClick={onClose}>

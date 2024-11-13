@@ -1,6 +1,6 @@
 
 import React from "react"
-import { Grid, Modal as MuiModal, Card, CardContent, Typography, IconButton, CardActions, Button, CardHeader } from "@mui/material"
+import { Grid, Modal as MuiModal, Card, CardContent, Typography, IconButton, CardActions, Button, CardHeader, SxProps, Theme } from "@mui/material"
 import classNames from "classnames"
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -8,7 +8,8 @@ type Props = {
     open: boolean
     onClose: () => void,
     children: any
-    title?: string
+    title?: string,
+    sx?: SxProps<Theme>
 }
 
 const ModalContent = ({ children }: any) => {
@@ -17,18 +18,23 @@ const ModalContent = ({ children }: any) => {
     </div>
 }
 
-export const Modal = ({ open, onClose, title, children }: Props) => {
+export const Modal = ({ open, onClose, title, children, sx }: Props) => {
     return (
         <MuiModal
             open={open}
             onClose={onClose}
         >
             <Card
-                className={classNames(
-                    "absolute translate-y-[-50%] translate-x-[-50%] top-[50%] left-[50%]",
-                    "max-w-[80vw] min-w-[30%] max-h-[90vh] min-h-[50px]",
+                className={classNames("absolute translate-y-[-50%] translate-x-[-50%] top-[50%] left-[50%]"
                 )}
-                sx={{ overflow: "auto", }}
+                sx={{
+                    overflow: "auto",
+                    maxWidth: "80vw",
+                    minWidth: "30%",
+                    maxHeight: "90vh",
+                    minHeight: "50px",
+                    ...sx
+                }}
             >
                 <CardContent>
                     <ModalContent>

@@ -111,7 +111,7 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
           <FormControlLabel
             value={AccountType.Cuenta}
             control={<Radio />}
-            label="Grupo"
+            label="Cuenta"
           />
           <FormControlLabel
             value={AccountType.Subcuenta}

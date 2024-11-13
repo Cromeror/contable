@@ -116,6 +116,7 @@ export const ProductForm = ({
         </FormHelperText>
       </Stack>
       <FormHelperText error={!!errors.pucId}>{errors.pucId}</FormHelperText>
+      <Button>Agregar nueva cuenta</Button>
       <TextField
         label="Descripción"
         multiline
