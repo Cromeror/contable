@@ -40,7 +40,6 @@ type Props = {
 };
 
 export const AccountingForm = ({ controls, defaultValue }: Props) => {
-  const [accountType, setAccountType] = useState("");
   const { mutate } = useCreatePucMutation();
 
   const formik = useFormik({
@@ -83,6 +82,7 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
         spacing={2}
       >
         <InfinityAutoCompleteInput
+          filterData={true}
           label="Codigo principal"
           {...getFieldProps("parentId")}
           value={values?.parentId}

@@ -97,26 +97,28 @@ export const ProductForm = ({
 
       <Stack direction={"row"} spacing={2}>
         <InfinityAutoCompleteInput
+          filterData={false}
           label={
-            values.pucId ? "Codigo principal" : "Selecciona un codigo principal"
+            values.pucId
+              ? "Codigo principal"
+              : "Selecciona una cuenta principal"
           }
           value={values?.pucId}
           onChange={(value) => {
             setFieldValue("pucId", value.id);
           }}
         />
-        <TextField
+        {/* <TextField
           label="Subcuenta"
           onChange={() => {
             console.log("Ingreso cuenta secundaria");
           }}
-        />
+        /> */}
         <FormHelperText error={!!(touched.subcuenta && errors.subcuenta)}>
           {errors.subcuenta && touched.subcuenta && errors.subcuenta}
         </FormHelperText>
       </Stack>
       <FormHelperText error={!!errors.pucId}>{errors.pucId}</FormHelperText>
-      <Button>Agregar nueva cuenta</Button>
       <TextField
         label="Descripción"
         multiline

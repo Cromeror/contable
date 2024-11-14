@@ -1,3 +1,4 @@
+import { getPucData } from "@/utils/pucUtils";
 import {
   Box,
   CircularProgress,
@@ -21,31 +22,7 @@ type Props = {
   onChange?: (value: any) => void;
   name?: string;
   value?: any;
-};
-
-const buildQuery = (params: any = {}): string => {
-  const query =
-    "?" +
-    Object.keys(params)
-      .map((key) =>
-        params[key] || params[key] >= -1 ? `${key}=${params[key]}` : ""
-      )
-      .join("&")
-      .replace(/&$/, "");
-  return query === "?" ? "" : query;
-};
-
-const getPucData = async (params?: {
-  skip?: number;
-  take?: number;
-  search?: string;
-  searchCode?: string;
-  searchName?: string;
-}) => {
-  const response = await fetch(`/api/puc${buildQuery(params)}`);
-  const data = await response.json();
-  const filterData = data.filter((item: any) => item.code.length >= 4);
-  return filterData;
+  filterData?: boolean;
 };
 
 export const InfinityAutoCompleteInput = ({
@@ -53,6 +30,7 @@ export const InfinityAutoCompleteInput = ({
   label,
   onChange,
   value,
+  filterData,
 }: Props) => {
   const anchorEl = useRef<HTMLInputElement>(null);
   const [showPopover, setShowPopover] = useState(false);
@@ -73,11 +51,13 @@ export const InfinityAutoCompleteInput = ({
       setSelectedOption(value);
     }
     setOptions({ isLoading: true, data: [] });
-    getPucData({ take: 10, skip: page }).then((data) => {
-      setOptions({ data, isLoading: false });
-      optiosnBackup.current = data;
-    });
-  }, [value]);
+    getPucData({ take: 10, skip: page, filterByLength: filterData }).then(
+      (data) => {
+        setOptions({ data, isLoading: false });
+        optiosnBackup.current = data;
+      }
+    );
+  }, [value, filterData, page]);
 
   const onSearchHandler = useCallback(
     debounce(async ({ search }: { search: string }) => {
