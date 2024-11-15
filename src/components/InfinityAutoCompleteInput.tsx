@@ -48,7 +48,14 @@ export const InfinityAutoCompleteInput = ({
 
   useEffect(() => {
     if (value) {
-      setSelectedOption(value);
+      if (typeof value === "number") {
+        const foundOption = options.data.find((option) => option.id === value);
+        if (foundOption) {
+          setSelectedOption(foundOption);
+        }
+      } else {
+        setSelectedOption(value);
+      }
     }
     setOptions({ isLoading: true, data: [] });
     getPucData({ take: 10, skip: page, filterByLength: filterData }).then(
