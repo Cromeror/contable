@@ -12,10 +12,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { InfinityAutoCompleteInput } from "./InfinityAutoCompleteInput";
 import { useCreateProduct } from "@/queries/productsQueries";
+import { PucAccount } from "@/app/api/puc/definitions";
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string().required("El nombre es requerido"),
-  pucId: Yup.number().required("Debe seleccionar una cuenta principal"),
+  pucAccount: Yup.object().required("Debe seleccionar una cuenta principal"),
   unitPrice: Yup.number().required("El precio unitario es requerido"),
   subcuenta: Yup.number()
     .typeError("Debe ser un número")
@@ -30,14 +31,13 @@ type FormValues = {
   name: string;
   description: string;
   subcuenta: string;
-  pucId: number;
+  pucAccount: PucAccount;
   unitPrice: number;
 };
 
 const initialValues = {
   name: "",
   description: "",
-  pucId: "",
   subcuenta: "",
   unitPrice: "",
 };
@@ -52,10 +52,11 @@ type Props = {
 export const ProductForm = ({
   controls,
   defaultValue,
-  onSuccess = () => {},
+  onSuccess = () => { },
   onError,
 }: Props) => {
   const { mutateAsync, isPending } = useCreateProduct();
+
   const {
     handleSubmit,
     errors,
@@ -74,7 +75,7 @@ export const ProductForm = ({
           await mutateAsync({
             name: values.name,
             description: values.description,
-            pucId: values.pucId as number,
+            pucId: values.pucAccount?.id!,
             unitPrice: values.unitPrice as number,
           })
         );
@@ -97,15 +98,15 @@ export const ProductForm = ({
 
       <Stack direction={"row"} spacing={2}>
         <InfinityAutoCompleteInput
+          labelFormat={(value: PucAccount) => `${value.code} - ${value.description}`}
           filterData={false}
           label={
-            values.pucId
+            values.pucAccount
               ? "Codigo principal"
-              : "Selecciona una cuenta principal"
+              : "Selecciona una cuenta"
           }
-          value={values?.pucId}
           onChange={(value) => {
-            setFieldValue("pucId", value.id);
+            setFieldValue("pucAccount", value);
           }}
         />
         {/* <TextField
@@ -118,7 +119,7 @@ export const ProductForm = ({
           {errors.subcuenta && touched.subcuenta && errors.subcuenta}
         </FormHelperText>
       </Stack>
-      <FormHelperText error={!!errors.pucId}>{errors.pucId}</FormHelperText>
+      <FormHelperText error={!!errors.pucAccount}>{errors.pucAccount}</FormHelperText>
       <TextField
         label="Descripción"
         multiline

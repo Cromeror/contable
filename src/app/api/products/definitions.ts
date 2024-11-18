@@ -2,6 +2,6 @@ export type Product = {
     id?: number;
     name: string;
     description: string;
-    pucId: number;
+    pucId: number | string;
     unitPrice: number;
 }

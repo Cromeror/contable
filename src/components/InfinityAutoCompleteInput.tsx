@@ -1,9 +1,6 @@
 import { getPucData } from "@/utils/pucUtils";
 import {
-  Box,
   CircularProgress,
-  FormControl,
-  InputLabel,
   ListItemText,
   MenuItem,
   MenuList,
@@ -13,29 +10,34 @@ import {
   TextField,
   Theme,
 } from "@mui/material";
-import { debounce, set } from "lodash";
+import { debounce } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 type Props = {
+  labelFormat: (value: any) => string;
   sx?: SxProps<Theme>;
   label?: string;
   onChange?: (value: any) => void;
   name?: string;
-  value?: any;
+  defaultValue?: any;
   filterData?: boolean;
 };
+
+const TAKE = 5;
 
 export const InfinityAutoCompleteInput = ({
   sx,
   label,
   onChange,
-  value,
+  defaultValue,
   filterData,
+  labelFormat
 }: Props) => {
   const anchorEl = useRef<HTMLInputElement>(null);
   const [showPopover, setShowPopover] = useState(false);
-  const [selectedOption, setSelectedOption] = React.useState<any>(null);
+  const [selectedOption, setSelectedOption] = React.useState<any>(defaultValue);
   const [page, setPage] = React.useState(0);
+  const [search, setSearch] = useState<string | undefined>();
   const [options, setOptions] = useState<{
     isLoading: boolean;
     data: any[];
@@ -44,53 +46,38 @@ export const InfinityAutoCompleteInput = ({
     data: [],
   });
 
-  const optiosnBackup = useRef<any[]>();
-
   useEffect(() => {
-    if (value) {
-      if (typeof value === "number") {
-        const foundOption = options.data.find((option) => option.id === value);
-        if (foundOption) {
-          setSelectedOption(foundOption);
-        }
-      } else {
-        setSelectedOption(value);
-      }
-    }
     setOptions({ isLoading: true, data: [] });
-    getPucData({ take: 10, skip: page, filterByLength: filterData }).then(
+    getPucData({ take: TAKE, skip: page, filterByLength: filterData, search }).then(
       (data) => {
         setOptions({ data, isLoading: false });
-        optiosnBackup.current = data;
       }
     );
-  }, [value, filterData, page]);
+  }, [filterData, page, search]);
 
   const onSearchHandler = useCallback(
     debounce(async ({ search }: { search: string }) => {
       if (!search) return;
-      optiosnBackup.current = options.data;
-      setOptions({ isLoading: true, data: [] });
-      const searchresult = await getPucData({
-        search,
-      });
-      setOptions({
-        data: searchresult,
-        isLoading: false,
-      });
+
+      setPage(-1); // En la api, si se pasa skip=-1, se devuelven todos los datos se debe ignorar el take
+      setSearch(search);
     }, 300),
     []
   );
 
+  const resetFilters = () => {
+    setSearch(undefined);
+    setPage(0);
+  };
+
   const onSelectHandler = (option: any) => {
     setSelectedOption(option);
-    setOptions({ isLoading: false, data: optiosnBackup.current || [] });
-    setShowPopover(false);
     onChange && onChange(option);
+    onClosePopover();
   };
 
   const onClosePopover = () => {
-    setOptions({ isLoading: false, data: optiosnBackup.current || [] });
+    resetFilters();
     setShowPopover(false);
   };
 
@@ -101,7 +88,7 @@ export const InfinityAutoCompleteInput = ({
         ref={anchorEl}
         value={
           selectedOption
-            ? `${selectedOption.code} - ${selectedOption.description}`
+            ? labelFormat && labelFormat(selectedOption)
             : ""
         }
         onClick={() => setShowPopover(true)}
@@ -144,7 +131,7 @@ export const InfinityAutoCompleteInput = ({
                   onClick={() => onSelectHandler(option)}
                 >
                   <ListItemText>
-                    {option.code} - {option.description}
+                    {labelFormat && labelFormat(option)}
                   </ListItemText>
                 </MenuItem>
               ))}
