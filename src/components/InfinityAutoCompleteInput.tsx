@@ -1,6 +1,8 @@
 import { getPucData } from "@/utils/pucUtils";
 import {
   CircularProgress,
+  IconButton,
+  InputAdornment,
   ListItemText,
   MenuItem,
   MenuList,
@@ -10,7 +12,8 @@ import {
   TextField,
   Theme,
 } from "@mui/material";
-import { debounce } from "lodash";
+import CloseIcon from "@mui/icons-material/Close";
+import { debounce, set } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -31,12 +34,13 @@ export const InfinityAutoCompleteInput = ({
   onChange,
   defaultValue,
   filterData,
-  labelFormat
+  labelFormat,
 }: Props) => {
   const anchorEl = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [showPopover, setShowPopover] = useState(false);
   const [selectedOption, setSelectedOption] = React.useState<any>(defaultValue);
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(-1);
   const [search, setSearch] = useState<string | undefined>();
   const [options, setOptions] = useState<{
     isLoading: boolean;
@@ -48,26 +52,32 @@ export const InfinityAutoCompleteInput = ({
 
   useEffect(() => {
     setOptions({ isLoading: true, data: [] });
-    getPucData({ take: TAKE, skip: page, filterByLength: filterData, search }).then(
-      (data) => {
-        setOptions({ data, isLoading: false });
-      }
-    );
+    getPucData({
+      take: TAKE,
+      skip: page,
+      filterByLength: filterData,
+      search,
+    }).then((data) => {
+      setOptions({ data, isLoading: false });
+    });
   }, [filterData, page, search]);
 
   const onSearchHandler = useCallback(
     debounce(async ({ search }: { search: string }) => {
       if (!search) return;
 
-      setPage(-1); // En la api, si se pasa skip=-1, se devuelven todos los datos se debe ignorar el take
+      setPage(-1);
       setSearch(search);
     }, 300),
     []
   );
 
   const resetFilters = () => {
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
     setSearch(undefined);
-    setPage(0);
+    setPage(-1);
   };
 
   const onSelectHandler = (option: any) => {
@@ -86,11 +96,7 @@ export const InfinityAutoCompleteInput = ({
       <TextField
         label={label}
         ref={anchorEl}
-        value={
-          selectedOption
-            ? labelFormat && labelFormat(selectedOption)
-            : ""
-        }
+        value={selectedOption ? labelFormat && labelFormat(selectedOption) : ""}
         onClick={() => setShowPopover(true)}
         InputLabelProps={{ shrink: !!selectedOption }}
         fullWidth
@@ -108,8 +114,15 @@ export const InfinityAutoCompleteInput = ({
           <TextField
             label={label}
             sx={{ width: "100%" }}
-            inputProps={{
-              autoComplete: "off",
+            inputRef={inputRef}
+            InputProps={{
+              endAdornment: selectedOption ? (
+                <InputAdornment position="end">
+                  <IconButton onClick={resetFilters}>
+                    <CloseIcon />
+                  </IconButton>
+                </InputAdornment>
+              ) : null,
             }}
             onChange={(e) => {
               const searchValue = e.target.value;

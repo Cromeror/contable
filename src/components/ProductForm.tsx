@@ -52,7 +52,7 @@ type Props = {
 export const ProductForm = ({
   controls,
   defaultValue,
-  onSuccess = () => { },
+  onSuccess = () => {},
   onError,
 }: Props) => {
   const { mutateAsync, isPending } = useCreateProduct();
@@ -98,12 +98,12 @@ export const ProductForm = ({
 
       <Stack direction={"row"} spacing={2}>
         <InfinityAutoCompleteInput
-          labelFormat={(value: PucAccount) => `${value.code} - ${value.description}`}
+          labelFormat={(value: PucAccount) =>
+            `${value.code} - ${value.description}`
+          }
           filterData={false}
           label={
-            values.pucAccount
-              ? "Codigo principal"
-              : "Selecciona una cuenta"
+            values.pucAccount ? "Codigo principal" : "Selecciona una cuenta"
           }
           onChange={(value) => {
             setFieldValue("pucAccount", value);
@@ -119,7 +119,9 @@ export const ProductForm = ({
           {errors.subcuenta && touched.subcuenta && errors.subcuenta}
         </FormHelperText>
       </Stack>
-      <FormHelperText error={!!errors.pucAccount}>{errors.pucAccount}</FormHelperText>
+      <FormHelperText error={!!errors.pucAccount}>
+        {errors.pucAccount}
+      </FormHelperText>
       <TextField
         label="Descripción"
         multiline

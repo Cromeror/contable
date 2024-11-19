@@ -84,8 +84,8 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
         <InfinityAutoCompleteInput
           filterData={true}
           label="Codigo principal"
+          labelFormat={(value) => `${value.code} - ${value.description}`}
           {...getFieldProps("parentId")}
-          value={values?.parentId}
           onChange={(value) => setFieldValue("parentId", value)}
         />
         <TextField

@@ -12,12 +12,15 @@ export async function GET(request: Request) {
 
 
   let query: { take?: number, skip?: number, where?: any } = {}
-
-  if (skip) {
-    query.skip = skip
-  }
-  if (take) {
-    query.take = take
+  if(skip === -1) {
+   query = {}
+  }else{
+    if (skip) {
+      query.skip = skip
+    }
+    if (take) {
+      query.take = take
+    }
   }
 
   if (search) {
