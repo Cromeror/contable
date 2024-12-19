@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import { InfinityAutoCompleteInput } from "./InfinityAutoCompleteInput";
 import { useCreatePucMutation } from "@/queries/pucQueries";
 import React, { useEffect, useState } from "react";
+import { PucTextField } from "./PucTextField";
 
 enum AccountType {
   Clase = "class",
@@ -27,6 +28,7 @@ const initialValues = {
   concept: "",
   parentId: "",
 };
+
 const PucSchema = Yup.object().shape({
   parentId: Yup.string().required("Seleccione la cuenta"),
   concept: Yup.string().required("El concepto es requerido"),
@@ -75,6 +77,7 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
+      <PucTextField />
       <Stack
         direction="row"
         justifyContent="space-between"
