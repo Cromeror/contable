@@ -1,26 +1,14 @@
+import React from "react";
 import {
   Button,
-  FormControl,
-  FormControlLabel,
   FormHelperText,
-  Radio,
-  RadioGroup,
   Stack,
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { InfinityAutoCompleteInput } from "./InfinityAutoCompleteInput";
 import { useCreatePucMutation } from "@/queries/pucQueries";
-import React, { useEffect, useState } from "react";
 import { PucTextField } from "./PucTextField";
-
-enum AccountType {
-  Clase = "class",
-  Grupo = "group",
-  Cuenta = "account",
-  Subcuenta = "subaccount",
-}
 
 const initialValues = {
   accountType: "",
@@ -60,8 +48,10 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
       }, 400);
     },
   });
+
   const {
     setFieldValue,
+    setValues,
     getFieldProps,
     errors,
     touched,
@@ -70,23 +60,27 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
     isSubmitting,
     values,
   } = formik;
-  useEffect(() => {
-    setFieldValue("account", "");
-    setFieldValue("parentId", "");
-  }, [values.accountType, setFieldValue]);
+
+  /* useEffect(() => {
+    setValues({
+      account: "",
+      parentId: "",
+    });
+  }, [values.accountType, setFieldValue]); */
 
   const handlePucChange = (value: any) => {
     setFieldValue("selectedPuc", value);
+    console.log("PUC CODE", value);
   };
+
+  console.log(errors);
+
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
       <PucTextField onChange={handlePucChange} getFieldProps={getFieldProps} />
-
-      <FormHelperText
-        error={!!(errors.account && touched.account && errors.account)}
-      >
-        <> {touched.account && errors.account}</>
+      <FormHelperText error={!!(touched.account && errors.account)}>
+        {`${errors.account}`}
       </FormHelperText>
       <TextField
         label="Concepto"
@@ -95,10 +89,8 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
         rows={3}
         {...getFieldProps("concept")}
       />
-      <FormHelperText
-        error={!!(errors.concept && touched.concept && errors.concept)}
-      >
-        <>{touched.concept && errors.concept}</>
+      <FormHelperText error={!!(errors.concept && touched.concept && errors.concept)}      >
+        {`${errors.concept}`}
       </FormHelperText>
       <Stack direction="row" justifyContent="flex-end" spacing={2}>
         {controls}

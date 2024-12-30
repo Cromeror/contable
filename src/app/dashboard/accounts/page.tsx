@@ -4,9 +4,11 @@ import { Button, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { PucTable } from './PucTable';
 import { PucModalForm } from '@/components/PucModalForm';
+import { useGetPuc } from '@/queries/pucQueries';
 
 const Accounting = () => {
     const [openNewAccountForm, setOpenNewAccountForm] = useState(false);
+    const { data: pucDataList = [], isLoading, error } = useGetPuc({ skip: -1 })
 
     return (
         <div>
@@ -16,7 +18,12 @@ const Accounting = () => {
                         <Typography variant="subtitle2" gutterBottom>Cuentas</Typography>
                     </Grid>
                     <Grid item>
-                        <Button variant='contained' onClick={() => setOpenNewAccountForm(!openNewAccountForm)}>Agregar cuenta</Button>
+                        <Button
+                            variant='contained'
+                            disabled={isLoading}
+                            onClick={() => setOpenNewAccountForm(!openNewAccountForm)}>
+                            Agregar cuenta
+                        </Button>
                     </Grid>
                 </Grid>
                 <Grid item container xs={12} justifyContent={"space-between"} alignItems={"center"}>
@@ -24,7 +31,7 @@ const Accounting = () => {
                         <Search />
                     </Grid>
                 </Grid>
-                <PucTable />
+                <PucTable data={pucDataList} />
             </Grid>
             <PucModalForm open={openNewAccountForm} onClose={() => setOpenNewAccountForm(false)} />
         </div>

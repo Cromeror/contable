@@ -16,7 +16,7 @@ export const useGetPuc = (
 
     return useQuery({
         queryKey: ['GET_PUC' + uniqueKey],
-        queryFn: async () => {
+        queryFn: async (): Promise<PucAccount[]> => {
             const { skip = 0, take = 10 } = params || {}
             const response = await fetch(`/api/puc?skip=${skip}&take=${take}`)
             const data = await response.json()

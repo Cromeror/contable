@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { use, useEffect, useReducer, useRef, useState } from "react";
 import {
   Box,
   CircularProgress,
@@ -12,10 +12,11 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { getPucData, QueryPucParams } from "@/utils/pucUtils";
+import { QueryPucParams } from "@/utils/pucUtils";
 import { debounce } from "lodash";
 import { PucAccount } from "@/app/api/puc/definitions";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { useGetPuc } from "@/queries/pucQueries";
 
 type Props = {
   onChange?: (value: any) => void;
@@ -23,11 +24,8 @@ type Props = {
 };
 
 enum ActionTypes {
-  REFETCH_SUCCESS = "REFETCH_SUCCESS",
-  LOADING = "LOADING",
-  RESET = "RESET",
+  LOAD_OPTIONS = "LOAD_OPTIONS",
   SELECT_OPTION = "SELECT_OPTION",
-  SHOW_SUGGESTIONS = "SHOW_SUGGESTIONS",
   ENABLE_FOCUS = "ENABLE_FOCUS",
 }
 
@@ -38,7 +36,6 @@ type Actions = {
 
 type State = {
   options: PucAccount[];
-  isLoading: boolean;
   showSuggestions: boolean;
   value?: PucAccount;
   focusEnabled: boolean;
@@ -46,27 +43,18 @@ type State = {
 
 const initialState = {
   options: [],
-  isLoading: false,
   showSuggestions: false,
   focusEnabled: true,
 };
 
 const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
-    case ActionTypes.LOADING:
+    case ActionTypes.LOAD_OPTIONS:
       return {
         ...state,
-        isLoading: true,
-        showSuggestions: true,
+        showSuggestions: action.payload.showSuggestions,
         focusEnabled: false,
-      };
-    case ActionTypes.REFETCH_SUCCESS:
-      return {
-        ...state,
-        isLoading: false,
-        showSuggestions: true,
-        focusEnabled: false,
-        options: action.payload,
+        options: action.payload.options,
       };
     case ActionTypes.SELECT_OPTION:
       return {
@@ -74,17 +62,6 @@ const reducer = (state: State, action: Actions): State => {
         showSuggestions: false,
         value: action.payload,
         focusEnabled: false,
-      };
-    case ActionTypes.SHOW_SUGGESTIONS:
-      return {
-        ...state,
-        showSuggestions: state.focusEnabled,
-        isLoading: state.focusEnabled,
-      };
-    case ActionTypes.RESET:
-      return {
-        ...state,
-        showSuggestions: false,
       };
     case ActionTypes.ENABLE_FOCUS:
       return {
@@ -97,39 +74,39 @@ const reducer = (state: State, action: Actions): State => {
   }
 };
 
+const pucDataFilter = (data: PucAccount[], search: string = "", minLength: number = 4): PucAccount[] => {
+  if (search) return data.filter((item: PucAccount) => `${item.code}`.length >= minLength && (item.description + item.code).toLowerCase().includes(search.toLowerCase()))
+
+  return data.filter((item: PucAccount) => `${item.code}`.length >= minLength)
+}
+
 export const PucTextField = ({ onChange, getFieldProps }: Props) => {
+  const { data: pucDataList = [], isLoading, error } = useGetPuc({ skip: -1 })
   const [state, dispatch] = useReducer(reducer, initialState);
   const [subCode, setSubCode] = useState("");
   const anchorEl = useRef<HTMLDivElement>(null);
 
+  const resetFilters = () => {
+    dispatch({ type: ActionTypes.LOAD_OPTIONS, payload: { showSuggestions: false, options: pucDataFilter(pucDataList) } });
+  }
+
   const refresh = async (queryParams: QueryPucParams) => {
-    try {
-      const data = await getPucData(queryParams);
-      dispatch({ type: ActionTypes.REFETCH_SUCCESS, payload: data });
-    } catch (error) {
-      console.error("Error fetching PUC data:", error);
-      dispatch({ type: ActionTypes.RESET });
-    }
+    dispatch({
+      type: ActionTypes.LOAD_OPTIONS,
+      payload: {
+        showSuggestions: true,
+        options: pucDataFilter(pucDataList, queryParams.search)
+      }
+    });
   };
 
   const debouncedRefresh = debounce(refresh, 300);
 
   const handleFocus = () => {
-    dispatch({ type: ActionTypes.SHOW_SUGGESTIONS });
-    if (state.focusEnabled) {
-      debouncedRefresh({
-        search: "",
-        skip: 0,
-      });
-    }
-  };
-
-  const handleBlur = () => {
-    dispatch({ type: ActionTypes.ENABLE_FOCUS });
+    //dispatch({ type: ActionTypes.LOAD_OPTIONS, payload: { showSuggestions: true, options: pucDataFilter(pucDataList) } });
   };
 
   const handleSearch = (search: string) => {
-    dispatch({ type: ActionTypes.LOADING });
     debouncedRefresh({
       search,
       skip: 0,
@@ -168,7 +145,7 @@ export const PucTextField = ({ onChange, getFieldProps }: Props) => {
             placeholder="Cuenta"
             onChange={(e) => handleSearch(e.target.value)}
             onFocus={handleFocus}
-            onBlur={handleBlur}
+            onBlur={() => resetFilters()}
             InputLabelProps={{
               shrink: true,
             }}
@@ -194,7 +171,7 @@ export const PucTextField = ({ onChange, getFieldProps }: Props) => {
           <Popover
             open={state.showSuggestions}
             anchorEl={anchorEl.current}
-            onClose={() => dispatch({ type: ActionTypes.RESET })}
+            onClose={() => resetFilters()}
             anchorOrigin={{
               vertical: "bottom",
               horizontal: "left",
@@ -208,7 +185,7 @@ export const PucTextField = ({ onChange, getFieldProps }: Props) => {
               sx={{ p: 2, maxHeight: "40vh", minWidth: "330px" }}
               spacing={1}
             >
-              {state.isLoading ? (
+              {isLoading ? (
                 <Box display="flex" justifyContent="center" p={2}>
                   <CircularProgress size={24} />
                 </Box>

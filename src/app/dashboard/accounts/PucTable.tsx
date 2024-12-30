@@ -1,5 +1,5 @@
+import { PucAccount } from "@/app/api/puc/definitions"
 import { Table } from "@/components/Table"
-import { useGetPuc } from "@/queries/pucQueries";
 import { Grid, Pagination } from "@mui/material"
 
 const colDefs = [
@@ -7,8 +7,12 @@ const colDefs = [
     { field: "description", headerName: "Concepto" },
 ]
 
-export const PucTable = () => {
-    const { data, isLoading, error } = useGetPuc()
+type Props = {
+    data: PucAccount[]
+}
+
+export const PucTable = ({ data }: Props) => {
+
     return (
         <Grid item container spacing={1} direction={'column'} alignItems={"flex-end"}>
             <Grid item xs={12} style={{ width: '100%' }}>
