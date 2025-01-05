@@ -1,6 +1,6 @@
 export type PucAccount = {
     id?: number;
-    code: number;
+    code: string;
     description: string;
     parentId?: number | null;
     tag?: string | null;

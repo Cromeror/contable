@@ -1,118 +1,97 @@
+import React, { useRef } from "react";
 import {
   Button,
-  FormControl,
-  FormControlLabel,
   FormHelperText,
-  Radio,
-  RadioGroup,
   Stack,
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { InfinityAutoCompleteInput } from "./InfinityAutoCompleteInput";
 import { useCreatePucMutation } from "@/queries/pucQueries";
-import React, { useEffect, useState } from "react";
-
-enum AccountType {
-  Clase = "class",
-  Grupo = "group",
-  Cuenta = "account",
-  Subcuenta = "subaccount",
-}
+import { PucTextField } from "./PucTextField";
+import { PucAccount } from "@/app/api/puc/definitions";
 
 const initialValues = {
   accountType: "",
-  account: "",
-  concept: "",
+  subCode: "",
+  description: "",
   parentId: "",
 };
+
+type Schema = {
+  subCode: number;
+  description: string;
+  parentId: number;
+}
+
 const PucSchema = Yup.object().shape({
   parentId: Yup.string().required("Seleccione la cuenta"),
-  concept: Yup.string().required("El concepto es requerido"),
-  account: Yup.string()
-    .matches(/^\d{2,}$/, "Debe contener hasta 2 dígitos")
+  description: Yup.string().required("La descripción es requerida"),
+  subCode: Yup.string()
+    .matches(/^[0-9]{2}$/, "Ingrese un número de 2 dígitos")
     .required("El número de la subcuenta es requerido"),
 });
+
 type Props = {
   controls?: any;
   defaultValue?: any;
+  onSuccess?: (response: any) => void;
 };
 
-export const AccountingForm = ({ controls, defaultValue }: Props) => {
-  const { mutate } = useCreatePucMutation();
+export const AccountingForm = ({ controls, defaultValue, onSuccess }: Props) => {
+  const { mutateAsync } = useCreatePucMutation();
+  const parentOptionSelected = useRef<PucAccount>();
 
-  const formik = useFormik({
+  const formik = useFormik<Schema>({
     initialValues: defaultValue || initialValues,
     validationSchema: PucSchema,
-    onSubmit: (values, { setSubmitting }) => {
-      mutate({
-        code: values.account,
-        description: values.concept,
-        parentId: defaultValue?.id,
-        tag: values.accountType,
-      } as any);
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        setSubmitting(false);
-      }, 400);
+    onSubmit: (values: Schema, { setSubmitting }) => {
+      if (!parentOptionSelected.current?.code) {
+        console.error("Error en la selección de la cuenta");
+        return;
+      }
+
+      mutateAsync({
+        code: parentOptionSelected.current?.code + values.subCode,
+        description: values.description,
+        parentId: Number(values.parentId),
+        tag: "subaccount"
+      }).then(() => {
+        onSuccess?.(values);
+      });
     },
   });
+
   const {
     setFieldValue,
     getFieldProps,
     errors,
-    touched,
     handleSubmit,
     isValid,
     isSubmitting,
-    values,
   } = formik;
-  useEffect(() => {
-    setFieldValue("account", "");
-    setFieldValue("parentId", "");
-  }, [values.accountType, setFieldValue]);
+
+  const onChangePuc = (parent?: PucAccount, subAccount?: string) => {
+    parentOptionSelected.current = parent;
+    setFieldValue("parentId", parent?.id);
+    setFieldValue("subCode", subAccount);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        spacing={2}
-      >
-        <InfinityAutoCompleteInput
-          filterData={true}
-          label="Codigo principal"
-          labelFormat={(value) => `${value.code} - ${value.description}`}
-          {...getFieldProps("parentId")}
-          onChange={(value) => setFieldValue("parentId", value)}
-        />
-        <TextField
-          label="Subcuenta"
-          error={!!(errors.account && touched.account && errors.account)}
-          {...getFieldProps("account")}
-          inputProps={{
-            maxLength: 2,
-          }}
-        />
-      </Stack>
-      <FormHelperText
-        error={!!(errors.account && touched.account && errors.account)}
-      >
-        <> {touched.account && errors.account}</>
+      <PucTextField onChange={onChangePuc} error={!!(errors.parentId || errors.subCode)} />
+      <FormHelperText error={!!(errors.parentId || errors.subCode)}>
+        <>{`${errors.parentId || ""}${errors.parentId && errors.subCode ? `; ` : ""}${errors.subCode || ""}`}</>
       </FormHelperText>
       <TextField
-        label="Concepto"
-        error={!!(errors.concept && touched.concept && errors.concept)}
+        label="Descripción"
+        error={!!(errors.description)}
         multiline
         rows={3}
-        {...getFieldProps("concept")}
+        {...getFieldProps("description")}
       />
-      <FormHelperText
-        error={!!(errors.concept && touched.concept && errors.concept)}
-      >
-        <>{touched.concept && errors.concept}</>
+      <FormHelperText error={!!(errors.description)}      >
+        <>{`${errors?.description || ""}`}</>
       </FormHelperText>
       <Stack direction="row" justifyContent="flex-end" spacing={2}>
         {controls}
