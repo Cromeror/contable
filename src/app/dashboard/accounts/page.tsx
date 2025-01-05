@@ -1,10 +1,34 @@
 'use client'
 import { Search } from '@/components/Search';
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, Typography, Pagination } from '@mui/material';
 import React, { useState } from 'react';
-import { PucTable } from './PucTable';
 import { PucModalForm } from '@/components/PucModalForm';
 import { useGetPuc } from '@/queries/pucQueries';
+import { Table } from "@/components/Table"
+import { ColDef } from "ag-grid-community";
+
+const colDefs: ColDef[] = [
+    { field: "code", headerName: "Cuenta", width: 150 },
+    { field: "description", headerName: "Concepto", flex: 1 },
+    {
+        field: "tag", headerName: "Nivel", flex: 1,
+        cellRenderer: (params: any) => {
+            switch (params.data.tag) {
+                case "subaccount":
+                    return "Subcuenta"
+                case "account":
+                    return "Cuenta"
+                case "class":
+                    return "Clase"
+                case "group":
+                    return "Grupo"
+                default:
+                    return "No definido"
+            }
+        }
+    },
+    { field: "products", headerName: "Productos asociados", flex: 1 },
+]
 
 const Accounting = () => {
     const [openNewAccountForm, setOpenNewAccountForm] = useState(false);
@@ -31,7 +55,14 @@ const Accounting = () => {
                         <Search />
                     </Grid>
                 </Grid>
-                <PucTable data={pucDataList} />
+                <Table
+                    rowData={pucDataList}
+                    colDefs={colDefs}
+                    config={{
+                        pagination: true,
+                        paginationPageSize: 10
+                    }}
+                />
             </Grid>
             <PucModalForm open={openNewAccountForm} onClose={() => setOpenNewAccountForm(false)} />
         </div>
