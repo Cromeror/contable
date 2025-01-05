@@ -33,7 +33,7 @@ const PucSchema = Yup.object().shape({
   parentId: Yup.string().required("Seleccione la cuenta"),
   concept: Yup.string().required("El concepto es requerido"),
   account: Yup.string()
-    .matches(/^\d{2,}$/, "Debe contener hasta 2 dígitos")
+    .matches(/^[0-9]{1,2}$/, "Solo números, máximo 2 dígitos")
     .required("El número de la subcuenta es requerido"),
 });
 type Props = {
@@ -75,31 +75,14 @@ export const AccountingForm = ({ controls, defaultValue }: Props) => {
     setFieldValue("parentId", "");
   }, [values.accountType, setFieldValue]);
 
+  const handlePucChange = (value: any) => {
+    setFieldValue("selectedPuc", value);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
-      <PucTextField />
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        spacing={2}
-      >
-        <InfinityAutoCompleteInput
-          filterData={true}
-          label="Codigo principal"
-          labelFormat={(value) => `${value.code} - ${value.description}`}
-          {...getFieldProps("parentId")}
-          onChange={(value) => setFieldValue("parentId", value)}
-        />
-        <TextField
-          label="Subcuenta"
-          error={!!(errors.account && touched.account && errors.account)}
-          {...getFieldProps("account")}
-          inputProps={{
-            maxLength: 2,
-          }}
-        />
-      </Stack>
+      <PucTextField onChange={handlePucChange} getFieldProps={getFieldProps} />
+
       <FormHelperText
         error={!!(errors.account && touched.account && errors.account)}
       >

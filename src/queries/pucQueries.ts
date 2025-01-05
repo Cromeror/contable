@@ -26,6 +26,7 @@ export const useGetPuc = (
         refetchOnReconnect: false,
         refetchOnWindowFocus: false,
         refetchOnMount: false,
+        retry: 3
     })
 }
 
