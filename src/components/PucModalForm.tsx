@@ -1,4 +1,4 @@
-import { Button,  IconButton, Tooltip } from "@mui/material"
+import { Button, IconButton, Tooltip } from "@mui/material"
 import { AccountingForm } from "./AccountingForm"
 import { Modal } from "./Modal"
 import { useState } from "react"
@@ -19,11 +19,6 @@ export const PucModalForm = ({ open, onClose, defaultValue }: Props) => {
             onClose={onClose}
             title={defaultValue ? "Editar Cuenta" : "Registrar Cuenta"}
         >
-            <Tooltip title="Explicacion....." arrow>
-                <IconButton>
-                    <HelpOutline />
-                </IconButton>
-            </Tooltip>
             <AccountingForm controls={
                 <Button variant="outlined" onClick={onClose}>
                     Cancelar

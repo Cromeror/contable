@@ -5,22 +5,19 @@ const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
- 
+
   const skip = parseInt(searchParams.get('skip') as string) || 0;
   const take = parseInt(searchParams.get('take') as string) || 10;
   const search = searchParams.get('search')
 
 
   let query: { take?: number, skip?: number, where?: any } = {}
-  if(skip === -1) {
-   query = {}
-  }else{
-    if (skip) {
-      query.skip = skip
-    }
-    if (take) {
-      query.take = take
-    }
+
+  if (skip && skip >= 0) {
+    query.skip = skip
+  }
+  if (take && skip >= 0) {
+    query.take = take
   }
 
   if (search) {

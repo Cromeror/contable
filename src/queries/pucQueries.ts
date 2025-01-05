@@ -2,7 +2,7 @@
 import { PucAccount } from "@/app/api/puc/definitions"
 import { useMutation, useQuery } from "@tanstack/react-query"
 
-export const usePucQuery = (
+export const useGetPuc = (
     params?: {
         skip?: number,
         take?: number,
