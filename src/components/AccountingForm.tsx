@@ -81,7 +81,7 @@ export const AccountingForm = ({ controls, defaultValue, onSuccess }: Props) => 
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
       <PucTextField onChange={onChangePuc} error={!!(errors.parentId || errors.subCode)} />
       <FormHelperText error={!!(errors.parentId || errors.subCode)}>
-        {`${errors.parentId || ""}${errors.parentId && errors.subCode ? `; ` : ""}${errors.subCode || ""}`}
+        <>{`${errors.parentId || ""}${errors.parentId && errors.subCode ? `; ` : ""}${errors.subCode || ""}`}</>
       </FormHelperText>
       <TextField
         label="Descripción"
@@ -91,7 +91,7 @@ export const AccountingForm = ({ controls, defaultValue, onSuccess }: Props) => 
         {...getFieldProps("description")}
       />
       <FormHelperText error={!!(errors.description)}      >
-        {`${errors?.description || ""}`}
+        <>{`${errors?.description || ""}`}</>
       </FormHelperText>
       <Stack direction="row" justifyContent="flex-end" spacing={2}>
         {controls}
