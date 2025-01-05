@@ -45,12 +45,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const data = await request.json()
   try {
-    const puc = await prisma.puc.create({
-      data: {
-        id: (new Date()).getTime(),
-        ...data,
-      }
-    })
+    const puc = await prisma.puc.create({ data })
     return NextResponse.json(puc);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {

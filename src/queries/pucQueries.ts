@@ -30,8 +30,8 @@ export const useGetPuc = (
     })
 }
 
-export const useCreatePucMutation = (config?: any) => useMutation<PucAccount>({
-    mutationFn: async (data: PucAccount) => {
+export const useCreatePucMutation = (config?: any) => useMutation<unknown, unknown, PucAccount>({
+    mutationFn: async (data) => {
         const response = await fetch('/api/puc', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
