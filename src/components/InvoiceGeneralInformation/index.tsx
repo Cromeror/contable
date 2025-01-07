@@ -1,4 +1,7 @@
-import { Box, Chip, Grid, Stack, Typography } from "@mui/material"
+import { Edit as EditIcon } from "@mui/icons-material"
+import { Box, Chip, Grid, Icon, IconButton, Stack, Typography } from "@mui/material"
+import { DatePicker } from "@mui/x-date-pickers"
+import { DateSelector } from "./DateSelector"
 
 export const InvoiceGeneralInformation = () => {
     return (
@@ -17,15 +20,8 @@ export const InvoiceGeneralInformation = () => {
                         </Typography>
                     </Stack>
                 </Grid>
-                <Grid item sm={4}>
-                    <Stack>
-                        <Typography sx={{ fontSize: 12 }}>
-                            Pagar hasta
-                        </Typography>
-                        <Typography sx={{ fontWeight: 600, fontSize: 14, textTransform: 'capitalize' }}>
-                            Mar 15, 2023
-                        </Typography>
-                    </Stack>
+                <Grid item sm={4} sx={{ cursor: "pointer" }}>
+                    <DateSelector />
                 </Grid>
             </Grid>
             <Grid container direction={"row"} spacing={2}>
