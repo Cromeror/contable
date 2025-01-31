@@ -1,8 +1,9 @@
 'use client'
 import React, { useState } from 'react';
 import { Table } from '@/components/Table';
-import { Button, Drawer, Grid, Pagination, Typography } from '@mui/material';
-import { ThirdPartiesForm } from '@/components/ThirdPartiesForm';
+import { Button, Card, Drawer, Grid, Pagination, Typography } from '@mui/material';
+import { ContactForm } from '@/components/ContactForm';
+import { Modal } from '@/components/Modal';
 
 const ThirdParties = () => {
     const [rowData, setRowData] = useState([
@@ -21,7 +22,7 @@ const ThirdParties = () => {
 
     const [openNewAccountForm, setOpenNewAccountForm] = useState(false);
 
-    const toggleDrawer = () => () => {
+    const closeCreationFormModal = () => () => {
         setOpenNewAccountForm(!openNewAccountForm);
     };
 
@@ -33,7 +34,7 @@ const ThirdParties = () => {
                         <Typography variant="subtitle2" gutterBottom>Terceros</Typography>
                     </Grid>
                     <Grid item>
-                        <Button variant='contained' onClick={toggleDrawer()}>Agregar tercero</Button>
+                        <Button variant='contained' onClick={closeCreationFormModal()}>Agregar tercero</Button>
                     </Grid>
                 </Grid>
                 <Grid item container spacing={1} direction={'column'} alignItems={"flex-end"}>
@@ -45,18 +46,13 @@ const ThirdParties = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Drawer
-                anchor={"right"}
+            <Modal
                 open={openNewAccountForm}
-                onClose={toggleDrawer()}
+                onClose={closeCreationFormModal()}
+                title='Nuevo contacto'
             >
-                <div className='px-4 py-8 flex flex-col gap-4'>
-                    <Typography variant="h6">
-                        Agregar tercero
-                    </Typography>
-                    <ThirdPartiesForm />
-                </div>
-            </Drawer>
+                <ContactForm />
+            </Modal>
         </div>
     );
 };

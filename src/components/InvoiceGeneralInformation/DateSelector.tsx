@@ -64,7 +64,7 @@ export const DateSelector = ({ }: Props) => {
                         console.log("closeOnSelect")
                     }}
                 />
-                : <Stack direction={"row"} alignItems={"center"} spacing={2} onClick={() => setEditMode(new Date())}>
+                : <Stack direction={"row"} alignItems={"start"} spacing={2} onClick={() => setEditMode(new Date())}>
                     <Stack>
                         <Typography sx={{ fontSize: 12 }}>
                             Pagar hasta

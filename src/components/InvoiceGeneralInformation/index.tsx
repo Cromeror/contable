@@ -2,6 +2,7 @@ import { Edit as EditIcon } from "@mui/icons-material"
 import { Box, Chip, Grid, Icon, IconButton, Stack, Typography } from "@mui/material"
 import { DatePicker } from "@mui/x-date-pickers"
 import { DateSelector } from "./DateSelector"
+import { SupplieSelector } from "./SupplieSelector"
 
 export const InvoiceGeneralInformation = () => {
     return (
@@ -26,17 +27,7 @@ export const InvoiceGeneralInformation = () => {
             </Grid>
             <Grid container direction={"row"} spacing={2}>
                 <Grid item sm={6}>
-                    <Stack>
-                        <Typography sx={{ fontSize: 12 }}>
-                            Proveedor
-                        </Typography>
-                        <Typography sx={{ fontWeight: 600, textTransform: 'capitalize' }}>
-                            Cristobal Romero
-                        </Typography>
-                        <Typography sx={{ fontSize: 12 }}>
-                            cristobal.romero@gmail.com
-                        </Typography>
-                    </Stack>
+                    <SupplieSelector />
                 </Grid>
                 <Grid item sm={6}>
                     <Stack>
