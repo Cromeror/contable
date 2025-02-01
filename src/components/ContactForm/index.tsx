@@ -36,7 +36,10 @@ type Schema = {
 const SignupSchema = Yup.object().shape({
   personType: Yup.object().required("El tipo de persona es requerido"),
   documentType: Yup.object().required("El tipo de documento es requerido"),
-  identification: Yup.string().required("La identificación es requerida"),
+  identification: Yup.object().shape({
+    value: Yup.string().required("El identificador es requerido"),
+    dv: Yup.string().optional(),
+  }),
   firstName: Yup.string().required("El nombre es requerido"),
   lastName: Yup.string().required("El apellido es requerido"),
   address: Yup.string().required("La dirección es requerida"),
@@ -104,6 +107,12 @@ export const ContactForm = () => {
     }
   };
 
+  const fullWidthCondition =
+    values.personType?.label === "Persona Natural" ||
+    values.documentType?.value === DocumentTypesValues.CC ||
+    values.documentType?.value === DocumentTypesValues.PASSPORT ||
+    values.documentType?.value === DocumentTypesValues.CIVIL_REGISTRATION;
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 min-w-[400px]">
       <FormControl fullWidth>
@@ -132,10 +141,10 @@ export const ContactForm = () => {
           label="Identificación"
           name="identification"
           documentType={values.documentType?.value}
-          error={errors.identification}
+          error={errors.identification?.value}
           onChange={(v) => onChangeValue("identification", v)}
           value={values.identification}
-          fullWidth={values.personType?.label === "Persona Natural"}
+          fullWidth={fullWidthCondition}
         />
       </FormControl>
 
